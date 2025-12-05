@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import SplashScreen from "@/components/SplashScreen";
 import RedLogo from "@/components/RedLogo";
 import Carousel from "@/components/EmblaCarousel";
+import CreateButton from "@/components/CreateButton";
+import LoginButton from "@/components/LoginButton";
 
 export default function HomePage() {
   const [showSplash, setShowSplash] = useState(true);
@@ -32,6 +34,14 @@ export default function HomePage() {
         
         <div>
           <Carousel />
+        </div>
+
+        <div className="flex justify-center mt-10">
+          <CreateButton href="/signup">Opret ny bruger</CreateButton>
+        </div>
+        
+        <div className="flex justify-center mt-8">
+          <LoginButton href="/login">Log ind</LoginButton>
         </div>
       </section>
     </main>
