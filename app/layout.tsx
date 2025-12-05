@@ -1,18 +1,21 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-// Du kan slette disse fonts hvis du vil!
-// Men jeg lader dem være, så projektet virker fra start.
-import { Geist, Geist_Mono } from "next/font/google";
+// Import Dosis and Palanquin fonts
+import { Dosis, Palanquin } from "next/font/google";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const dosis = Dosis({
+  weight: ["200", "300", "400", "500", "600", "700", "800"],
   subsets: ["latin"],
+  display: "swap",
+  variable: "--font-dosis",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const palanquin = Palanquin({
+  weight: ["100", "200", "300", "400", "500", "600", "700"],
   subsets: ["latin"],
+  display: "swap",
+  variable: "--font-palanquin",
 });
 
 export const metadata: Metadata = {
@@ -26,7 +29,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="da">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={`${dosis.variable} ${palanquin.variable} ${palanquin.className} antialiased`}>
         {children}
       </body>
     </html>

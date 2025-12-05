@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import SplashScreen from "@/components/SplashScreen";
 import RedLogo from "@/components/RedLogo";
+import Carousel from "@/components/EmblaCarousel";
 
 export default function HomePage() {
   const [showSplash, setShowSplash] = useState(true);
@@ -16,7 +17,7 @@ export default function HomePage() {
 
   return (
     <main 
-      className="min-h-screen p-6 relative"
+      className="min-h-screen relative"
       style={{
         backgroundImage: `url('assets/background-1.svg')`,
         backgroundSize: 'cover',
@@ -24,14 +25,15 @@ export default function HomePage() {
         backgroundRepeat: 'no-repeat'
       }}
     >
-      <div className="relative z-10">
-        {/* Logo at the top */}
+      <section className="relative z-10">
         <div className="flex justify-center">
           <RedLogo/>
         </div>
         
-        {/* resten af din forside */}
-      </div>
+        <div>
+          <Carousel />
+        </div>
+      </section>
     </main>
   );
 }
