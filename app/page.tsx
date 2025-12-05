@@ -7,16 +7,25 @@ export default function HomePage() {
   const [showSplash, setShowSplash] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowSplash(false), 2400);
+    const timer = setTimeout(() => setShowSplash(false), 4000);
     return () => clearTimeout(timer);
   }, []);
 
   if (showSplash) return <SplashScreen duration={4000} />;
 
   return (
-    <main className="min-h-screen p-6">
-      <h1 className="text-2xl font-bold">Velkommen til Malling Bio</h1>
-      {/* resten af din forside */}
+    <main 
+      className="min-h-screen p-6 relative"
+      style={{
+        backgroundImage: `url('/background-1.svg')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}
+    >
+      <div className="relative z-10">
+        {/* resten af din forside */}
+      </div>
     </main>
   );
 }
