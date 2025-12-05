@@ -1,4 +1,3 @@
-// components/SplashScreen.tsx
 "use client";
 import { useEffect, useState } from "react";
 import Lottie from "lottie-react";
