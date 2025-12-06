@@ -72,19 +72,7 @@ export default function WelcomeCarousel() {
           {SLIDES.map((slide) => (
             <div key={slide.id} className="min-w-full px-6">
               {/* CARD (centered inside slide) */}
-              <div className="
-  mx-auto 
-  max-w-lg 
-  bg-[#F2C9BC] 
-  rounded-2xl 
-  pl-6 
-  pr-6 
-  pt-2
-  h-[325px]
-  w-[320px]
-  flex 
-  flex-col 
-">
+              <div className="mx-auto max-w-lg bg-[#F2C9BC] rounded-2xl pl-6 pr-6 pt-2 h-[325px] w-[320px] flex flex-col">
                 <div className="flex justify-center mb-6">
                   <img src={slide.image} alt={slide.title} className="w-70 h-auto" />
                 </div>
@@ -109,9 +97,7 @@ export default function WelcomeCarousel() {
             key={idx}
             onClick={() => scrollTo(idx)}
             aria-label={`Go to slide ${idx + 1}`}
-            className={`w-4 h-4 rounded-full transition-all
-              ${selectedIndex === idx ? "bg-[#971B1E] scale-80" : "bg-[#F2C9BC] scale-70"}
-            `}
+            className={`w-4 h-4 rounded-full transition-all ${selectedIndex === idx ? "bg-[#971B1E] scale-80" : "bg-[#F2C9BC] scale-70"}`}
           />
         ))}
       </div>

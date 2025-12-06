@@ -22,9 +22,8 @@ export default function SplashScreen({ duration = 3000 }: { duration?: number })
     return () => { mounted = false; };
   }, []);
 
-
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-#FFF3E7;">
+    <div className="fixed inset-0 flex items-center justify-center bg-#FFF3E7 z-50">
       <Lottie 
         animationData={animationData} 
         loop={false} 

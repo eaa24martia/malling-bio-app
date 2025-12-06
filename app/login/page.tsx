@@ -1,25 +1,61 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import RedLogo from "@/components/RedLogo";
-import CreateButton from "@/components/CreateButton";
 import Input from "@/components/Input";
+import { signInUser } from "@/lib/auth";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const router = useRouter();
+
+  useEffect(() => {
+    // Disable scrolling on this page
+    document.body.style.overflow = 'hidden';
+    
+    // Re-enable scrolling when component unmounts
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
- 
-    console.log("Login form submitted:", { email, password });
+    setError("");
+
+    // Basic validation
+    if (!email.trim()) {
+      return setError("E-mail er påkrævet");
+    }
+
+    if (!password.trim()) {
+      return setError("Adgangskode er påkrævet");
+    }
+
+    setLoading(true);
+
+    try {
+      await signInUser({ email: email.trim(), password });
+      
+      // Redirect to dashboard or home page after successful login
+      router.push("/");
+    } catch (error: any) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <main 
-      className="min-h-screen relative"
+      className="h-screen relative overflow-hidden"
       style={{
         backgroundImage: `url('/assets/background-1.svg')`,
         backgroundSize: 'cover',
@@ -72,12 +108,41 @@ export default function LoginPage() {
         </section>
 
         <div className="flex justify-center mt-2">
-          <button type="submit" form="loginForm">
-            <CreateButton href="#">
-              Log ind
-            </CreateButton>
+          <button 
+            type="submit" 
+            form="loginForm" 
+            disabled={loading}
+            className="
+              inline-block
+              bg-[#B2182B]
+              text-white
+              font-bold
+              px-16
+              py-3
+              rounded-full
+              text-lg
+              text-center
+              shadow-[0_8px_0_0_#7C1C1A]
+              active:translate-y-1
+              active:shadow-[0_4px_0_0_#7C1C1A]
+              disabled:opacity-50
+              disabled:cursor-not-allowed
+              disabled:active:translate-y-0
+              disabled:active:shadow-[0_8px_0_0_#7C1C1A]
+              cursor-pointer
+            "
+          >
+            {loading ? "Logger ind..." : "Log ind"}
           </button>
         </div>
+
+        {error && (
+          <div className="text-center mt-4">
+            <p className="text-red-600 text-sm" style={{ fontFamily: 'var(--font-palanquin)' }}>
+              {error}
+            </p>
+          </div>
+        )}
 
         <p className="text-center text-sm text-[#192B5A] mt-6" style={{ fontFamily: 'var(--font-palanquin)' }}>
           Har du ikke en konto?{" "}

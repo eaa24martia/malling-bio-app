@@ -1,25 +1,66 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import RedLogo from "@/components/RedLogo";
-import CreateButton from "@/components/CreateButton";
 import Input from "@/components/Input";
+import { signUpUser } from "@/lib/auth";
 
 export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const router = useRouter();
+
+  useEffect(() => {
+    // Disable scrolling on this page
+    document.body.style.overflow = 'hidden';
+    
+    // Re-enable scrolling when component unmounts
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Signup form submitted:", { name, email, password });
+    setError("");
+
+    // Basic validation
+    if (!name.trim()) {
+      return setError("Navn er påkrævet");
+    }
+
+    if (!email.trim()) {
+      return setError("E-mail er påkrævet");
+    }
+
+    if (password.length < 6) {
+      return setError("Adgangskoden skal være mindst 6 tegn");
+    }
+
+    setLoading(true);
+
+    try {
+      await signUpUser({ name: name.trim(), email: email.trim(), password });
+      
+      // Redirect to login page after successful signup
+      router.push("/login");
+    } catch (error: any) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <main 
-      className="min-h-screen relative"
+      className="h-screen relative overflow-hidden"
       style={{
         backgroundImage: `url('/assets/background-1.svg')`,
         backgroundSize: 'cover',
@@ -82,12 +123,41 @@ export default function SignupPage() {
         </section>
 
         <div className="flex justify-center mt-2">
-          <button type="submit" form="signupForm">
-            <CreateButton href="#">
-              Opret bruger
-            </CreateButton>
+          <button 
+            type="submit" 
+            form="signupForm" 
+            disabled={loading}
+            className="
+              inline-block
+              bg-[#B2182B]
+              text-white
+              font-bold
+              px-16
+              py-3
+              rounded-full
+              text-lg
+              text-center
+              shadow-[0_8px_0_0_#7C1C1A]
+              active:translate-y-1
+              active:shadow-[0_4px_0_0_#7C1C1A]
+              disabled:opacity-50
+              disabled:cursor-not-allowed
+              disabled:active:translate-y-0
+              disabled:active:shadow-[0_8px_0_0_#7C1C1A]
+              cursor-pointer
+            "
+          >
+            {loading ? "Opretter bruger..." : "Opret bruger"}
           </button>
         </div>
+
+        {error && (
+          <div className="text-center mt-4">
+            <p className="text-red-600 text-sm" style={{ fontFamily: 'var(--font-palanquin)' }}>
+              {error}
+            </p>
+          </div>
+        )}
 
         <p className="text-center text-sm text-[#192B5A] mt-6" style={{ fontFamily: 'var(--font-palanquin)' }}>
           Har du allerede en konto?{" "}
