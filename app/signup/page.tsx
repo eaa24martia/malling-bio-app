@@ -14,7 +14,6 @@ export default function SignupPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Firebase authentication will be implemented here later
     console.log("Signup form submitted:", { name, email, password });
   };
 
@@ -43,7 +42,7 @@ export default function SignupPage() {
         </div>
 
         <div>
-          <h1 className="text-2xl font-bold text-center text-[#192B5A] mb-2 mt-2">
+          <h1 className="font-bold text-center text-[#192B5A] mb-2 mt-2" style={{ fontSize: '30px' }}>
             Opret ny bruger
           </h1>
 

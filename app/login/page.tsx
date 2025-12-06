@@ -7,15 +7,14 @@ import RedLogo from "@/components/RedLogo";
 import CreateButton from "@/components/CreateButton";
 import Input from "@/components/Input";
 
-export default function SignupPage() {
+export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Firebase authentication will be implemented here later
-    console.log("Signup form submitted:", { name, email, password });
+ 
+    console.log("Login form submitted:", { email, password });
   };
 
   return (
@@ -43,7 +42,7 @@ export default function SignupPage() {
         </div>
 
         <div>
-          <h1 className="text-2xl font-bold text-center text-[#192B5A] mb-2 mt-2">
+          <h1 className="font-bold text-center text-[#192B5A] mb-2 mt-2" style={{ fontSize: '30px' }}>
             Log ind
           </h1>
 
@@ -51,12 +50,12 @@ export default function SignupPage() {
 
           <form id="loginForm" onSubmit={handleSubmit} className="space-y-4">
             <Input
-              id="name"
-              label="Brugernavn"
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Dit fornavn"
+              id="email"
+              label="E-mail"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="din@gmail.com"
               required
             />
 
@@ -73,7 +72,7 @@ export default function SignupPage() {
         </section>
 
         <div className="flex justify-center mt-2">
-          <button type="submit" form="signupForm">
+          <button type="submit" form="loginForm">
             <CreateButton href="#">
               Log ind
             </CreateButton>
@@ -81,9 +80,9 @@ export default function SignupPage() {
         </div>
 
         <p className="text-center text-sm text-[#192B5A] mt-6" style={{ fontFamily: 'var(--font-palanquin)' }}>
-          Har du allerede en konto?{" "}
-          <Link href="/login" className="text-(--color-primary) font-medium hover:underline" style={{ fontFamily: 'var(--font-palanquin)' }}>
-            Log ind her
+          Har du ikke en konto?{" "}
+          <Link href="/signup" className="text-(--color-primary) font-medium hover:underline" style={{ fontFamily: 'var(--font-palanquin)' }}>
+            Opret en her
           </Link>
         </p>
         </div>
