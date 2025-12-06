@@ -43,7 +43,7 @@ export default function SignupPage() {
         </div>
 
         <div>
-          <h1 className="text-2xl font-bold text-center text-[#192B5A] mb-6 mt-6">
+          <h1 className="text-2xl font-bold text-center text-[#192B5A] mb-2 mt-2">
             Opret ny bruger
           </h1>
 
