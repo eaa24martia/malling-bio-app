@@ -3,6 +3,7 @@
 import RedHeader from "@/components/Header";
 import PreviewCarousel from "@/components/PreviewCarousel";
 import MovieSlider from "@/components/MovieSlider";
+import UpcomingSlider from "@/components/UpcomingMovies";
 
 export default function HomePage() {
   return (
@@ -33,6 +34,11 @@ export default function HomePage() {
             Aktuelle film
           </h2>
           <MovieSlider />
+
+           <h2 className="text-white text-[16px] font-bold mb-2 drop-shadow-lg pl-4 pt-4">
+            Kommende film
+          </h2>
+          <UpcomingSlider />
         </section>
       </main>
     </>
