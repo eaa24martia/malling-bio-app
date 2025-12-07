@@ -28,6 +28,16 @@ export default function MovieDetailPage() {
             <DetailHeader />
         </section>
 
+        <section className="mt-2 text-center">
+            <h2 className="text-[24px] font-bold mb-4 text-white">Wicked: Part II</h2>
+            <div className="flex gap-2 mb-4 justify-center">
+                <div className="bg-[#B2182B] text-white px-3 py-1 rounded-full text-sm">Fantasy</div>
+                <div className="bg-[#B2182B] text-white px-3 py-1 rounded-full text-sm">Musical</div>
+            </div>
+        </section>
+
+       
+
         {/* Bottom Navigation */}
         <BottomNav />
       </main>
