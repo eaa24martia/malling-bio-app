@@ -45,7 +45,7 @@ export default function LoginPage() {
       await signInUser({ email: email.trim(), password });
       
       // Redirect to dashboard or home page after successful login
-      router.push("/");
+      router.push("/home");
     } catch (error: any) {
       setError(error.message);
     } finally {
