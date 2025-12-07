@@ -33,7 +33,7 @@ const SLIDES: Slide[] = [
   {
     id: 3,
     image: "https://poster.ebillet.dk/DyrenesMagiskeDK-2025.large.jpg",
-    title: "Dyrenes Magiske",
+    title: "Dyrenes Magiske Jul",
     text: "",
   },
   {
@@ -59,8 +59,14 @@ export default function WelcomeCarousel() {
     emblaApi.on("select", onSelect);
     onSelect();
     
+    // Auto-scroll every 7 seconds
+    const autoScroll = setInterval(() => {
+      emblaApi.scrollNext();
+    }, 7000);
+    
     return () => {
       emblaApi.off("select", onSelect);
+      clearInterval(autoScroll);
     };
   }, [emblaApi, onSelect]);
 
