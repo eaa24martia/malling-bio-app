@@ -6,7 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 
 type Slide = {
   id: number;
-  image: string; // public path, e.g. "/carousel/seat.svg"
+  image: string;
   title: string;
   text: string;
 };
@@ -14,27 +14,33 @@ type Slide = {
 const SLIDES: Slide[] = [
   {
     id: 0,
-    image: "assets/slide-1.svg",
-    title: "Velkommen til Malling Bio",
-    text: "Oplev film, vælg sæder og gem dine billetter – alt samlet ét sted",
+    image: "https://poster.ebillet.dk/Zootropolis2Ny-2025.large.jpg",
+    title: "Zootropolis 2",
+    text: "",
   },
   {
     id: 1,
-    image: "assets/slide-2.svg",
-    title: "Find aktuelle film",
-    text: "Udforsk de film, der vises lige nu hos Malling Bio",
+    image: "https://poster.ebillet.dk/musenes-jul-2025.large.jpg",
+    title: "Musenes Jul",
+    text: "",
   },
   {
     id: 2,
-    image: "assets/slide-3.svg",
-    title: "Vælg dine sæder",
-    text: "Find den perfekte plads i salen - hurtigt og nemt",
+    image: "https://poster.ebillet.dk/DenSidsteViking-Citat-2025.large.jpg",
+    title: "Den Sidste Viking",
+    text: "",
   },
   {
     id: 3,
-    image: "assets/slide-4.svg",
-    title: "Billetter lige ved hånden",
-    text: "Gem din billet i appen og scan den direkte ved døren",
+    image: "https://poster.ebillet.dk/DyrenesMagiskeDK-2025.large.jpg",
+    title: "Dyrenes Magiske",
+    text: "",
+  },
+  {
+    id: 4,
+    image: "https://poster.ebillet.dk/imstillhere2025pris.large.jpg",
+    title: "I'm Still Here",
+    text: "",
   },
 ];
 
@@ -64,43 +70,46 @@ export default function WelcomeCarousel() {
   };
 
   return (
-    <div className="w-full max-w-3xl mx-auto">
-      {/* VIEWPORT */}
+    <div className="w-full">
       <div className="overflow-hidden" ref={emblaRef}>
-        {/* TRACK / CONTAINER */}
         <div className="flex">
           {SLIDES.map((slide) => (
-            <div key={slide.id} className="min-w-full px-6 mt-[70px]">
-              {/* CARD (centered inside slide) */}
-              <div className="mx-auto max-w-lg bg-[#F2C9BC] rounded-2xl pl-6 pr-6 pt-2 h-[325px] w-[320px] flex flex-col">
-                <div className="flex justify-center mb-6">
-                  <img src={slide.image} alt={slide.title} className="w-70 h-auto" />
+            <div key={slide.id} className="min-w-full mt-[70px]">
+              <div 
+                className="w-full h-[240px] flex flex-col items-center justify-center p-4 relative"
+                style={{
+                  backgroundImage: `url(${slide.image})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  backgroundRepeat: 'no-repeat'
+                }}
+              >
+                <div className="absolute inset-0 bg-[rgba(0,0,0,0.74)]"></div>
+
+                <div className="relative z-10 flex items-center justify-between w-full px-6">
+                  <div className="shrink-0">
+                    <img 
+                      src={slide.image} 
+                      alt={slide.title} 
+                      className="h-[200px] w-auto object-contain shadow-2xl rounded-lg"
+                    />
+                  </div>
+                  
+                  <div className="flex-1 ml-6 text-left">
+                    <p className="text-white text-[20px] mb-1 drop-shadow-lg opacity-100">
+                      Populært nu:
+                    </p>
+                    <h2 className="text-white text-[24px] font-bold mb-2 drop-shadow-lg">
+                      {slide.title}
+                    </h2>
+                  </div>
                 </div>
-
-                <h2 className="text-center text-[20px] font-bold text-[#192B53] mb-1">
-                  {slide.title}
-                </h2>
-
-                <p className="text-center text-[14px] text-[#192B53] leading-relaxed">
-                  {slide.text}
-                </p>
               </div>
             </div>
           ))}
         </div>
       </div>
-
-      {/* DOTS */}
-      <div className="flex justify-center items-center gap-4 mt-6">
-        {SLIDES.map((_, idx) => (
-          <button
-            key={idx}
-            onClick={() => scrollTo(idx)}
-            aria-label={`Go to slide ${idx + 1}`}
-            className={`w-4 h-4 rounded-full transition-all ${selectedIndex === idx ? "bg-[#971B1E] scale-80" : "bg-[#F2C9BC] scale-70"}`}
-          />
-        ))}
-      </div>
+     
     </div>
   );
 }
