@@ -90,7 +90,7 @@ export default function WelcomeCarousel() {
                   backgroundRepeat: 'no-repeat'
                 }}
               >
-                <div className="absolute inset-0 bg-[rgba(0,0,0,0.74)]"></div>
+                <div className="absolute inset-0 bg-[rgba(0,0,0,0.74)] shadow-lg"></div>
 
                 <div className="relative z-10 flex items-center justify-between w-full px-6">
                   <div className="shrink-0">
