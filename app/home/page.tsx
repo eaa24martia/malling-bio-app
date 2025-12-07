@@ -54,10 +54,10 @@ export default function LoginPage() {
     <main 
       className="h-screen relative overflow-hidden"
       style={{
-        backgroundImage: `url('/assets/background-1.svg')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
+        background: `url('/assets/backgrounds-2.svg'), linear-gradient(135deg, #000000 0%, #4B0009 100%)`,
+        backgroundSize: 'cover, cover',
+        backgroundPosition: 'center, center',
+        backgroundRepeat: 'no-repeat, no-repeat'
       }}
     >
       <section className="relative z-10">
