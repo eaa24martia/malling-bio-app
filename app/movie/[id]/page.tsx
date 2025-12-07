@@ -2,15 +2,16 @@
 
 import RedHeader from "@/components/Header";
 import BottomNav from "@/components/BottomNav";
+import DetailHeader from "@/components/DetailHeader";
 
-export default function HomePage() {
+export default function MovieDetailPage() {
   return (
-    <body>
+    <>
       {/* Fixed background layer */}
       <div 
         className="fixed inset-0 z-0"
         style={{
-          background: `url('/assets/backgrounds-2.svg'), linear-gradient(135deg, #000000 0%, #4B0009 100%)`,
+          background: '#000000',
           backgroundSize: 'cover, cover',
           backgroundPosition: 'center, center',
           backgroundRepeat: 'no-repeat, no-repeat'
@@ -23,9 +24,13 @@ export default function HomePage() {
           <RedHeader />
         </section>
 
+        <section>
+            <DetailHeader />
+        </section>
+
         {/* Bottom Navigation */}
         <BottomNav />
       </main>
-      </body>
+    </>
   );
 }
