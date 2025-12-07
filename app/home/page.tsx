@@ -5,6 +5,7 @@ import PreviewCarousel from "@/components/PreviewCarousel";
 import MovieSlider from "@/components/MovieSlider";
 import UpcomingSlider from "@/components/UpcomingMovies";
 import EventsSlider from "@/components/EventsSlider";
+import BottomNav from "@/components/BottomNav";
 
 export default function HomePage() {
   return (
@@ -57,6 +58,9 @@ export default function HomePage() {
           </h2>
           <EventsSlider />
         </section>
+
+        {/* Bottom Navigation */}
+        <BottomNav />
       </main>
     </>
   );
