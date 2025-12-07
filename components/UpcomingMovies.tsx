@@ -1,4 +1,4 @@
-// components/MovieSlider.tsx
+
 "use client";
 
 import useEmblaCarousel from "embla-carousel-react";
