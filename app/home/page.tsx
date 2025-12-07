@@ -29,7 +29,7 @@ export default function HomePage() {
         </header>
 
         <section>
-          <h2 className="text-white text-[16px] font-bold mb-2 drop-shadow-lg">
+          <h2 className="text-white text-[16px] font-bold mb-2 drop-shadow-lg pl-4 pt-4">
             Aktuelle film
           </h2>
           <MovieSlider />
