@@ -80,9 +80,9 @@ export default function WelcomeCarousel() {
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">
           {SLIDES.map((slide) => (
-            <div key={slide.id} className="min-w-full mt-[70px]">
+            <div key={slide.id} className="min-w-full mt-[79px]">
               <div 
-                className="w-full h-[240px] flex flex-col items-center justify-center p-4 relative"
+                className="w-full h-60 flex flex-col items-center justify-center p-4 relative"
                 style={{
                   backgroundImage: `url(${slide.image})`,
                   backgroundSize: 'cover',
