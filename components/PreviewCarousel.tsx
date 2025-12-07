@@ -45,7 +45,7 @@ const SLIDES: Slide[] = [
 ];
 
 export default function WelcomeCarousel() {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ align: "center", loop: false });
+  const [emblaRef, emblaApi] = useEmblaCarousel({ align: "center", loop: true });
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const onSelect = useCallback(() => {
