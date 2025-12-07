@@ -13,11 +13,18 @@ export default function DetailHeader() {
 
 
          <div className="absolute inset-0 flex items-end justify-center pb-8 z-20">
-           <img 
-             src="https://poster.ebillet.dk/WickedPartII-2025.large.jpg" 
-             alt="Movie Poster" 
-             className="w-[178px] h-[266px]object-cover rounded-lg shadow-lg"
-           />
+           <div className="relative">
+             <img 
+               src="https://poster.ebillet.dk/WickedPartII-2025.large.jpg" 
+               alt="Movie Poster" 
+               className="w-[178px] h-[266px] object-cover rounded-lg shadow-lg"
+             />
+             <img 
+               src="https://billet.mallingbio.dk/images/censur/censur-11.png" 
+               alt="Age limit" 
+               className="absolute bottom-2 right-2 w-8 h-8"
+             />
+           </div>
          </div>
     </section>
   );
