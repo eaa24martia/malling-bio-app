@@ -3,6 +3,7 @@
 import RedHeader from "@/components/Header";
 import BottomNav from "@/components/BottomNav";
 import DetailHeader from "@/components/DetailHeader";
+import DetailDescription from "@/components/DetailDescription";
 
 export default function MovieDetailPage() {
   return (
@@ -36,7 +37,9 @@ export default function MovieDetailPage() {
             </div>
         </section>
 
-       
+        <section className="px-4 mt-8">
+            < DetailDescription />
+        </section>
 
         {/* Bottom Navigation */}
         <BottomNav />
