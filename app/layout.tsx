@@ -20,6 +20,9 @@ const palanquin = Palanquin({
 
 export const metadata: Metadata = {
   title: "Malling Bio",
+  icons: {
+    icon: "/assets/favicon.svg",
+  },
 };
 
 export default function RootLayout({
