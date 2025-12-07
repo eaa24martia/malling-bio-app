@@ -89,18 +89,6 @@ export default function MovieSlider() {
           ))}
         </div>
       </div>
-
-      {/* DOTS */}
-      <div className="flex justify-center items-center gap-4 mt-6">
-        {SLIDES.map((_, idx) => (
-          <button
-            key={idx}
-            onClick={() => scrollTo(idx)}
-            aria-label={`Go to slide ${idx + 1}`}
-            className={`w-4 h-4 rounded-full transition-all ${selectedIndex === idx ? "bg-[#971B1E] scale-80" : "bg-[#F2C9BC] scale-70"}`}
-          />
-        ))}
-      </div>
     </div>
   );
 }
