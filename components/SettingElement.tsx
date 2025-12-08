@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import CreateButton from "./CreateButton";
 
 export default function SettingElement() {
   const [isHighContrast, setIsHighContrast] = useState(false);
 
   return (
     <div 
-      className="w-full min-h-[450px] mt-20 rounded-t-[30px] relative overflow-hidden"
+      className="w-full min-h-[560px] mt-20 rounded-t-[30px] relative overflow-hidden"
       style={{
         background: 'linear-gradient(to top, #400B10, #B2182B), url(/assets/backgrounds-3.svg)',
         backgroundSize: 'cover, cover',
@@ -56,6 +57,12 @@ export default function SettingElement() {
           <h3 className="text-white text-[20px] font-bold">Om Malling Bio</h3>
           <img src="assets/white-arrow-right.svg" alt="" className="w-10 h-10" />
         </button>
+      </div>
+
+
+        <div className="h-px bg-white my-6 mb-4"></div>
+      <div className="flex justify-center mt-8 pb-8">
+        <CreateButton href="/">Log ud</CreateButton>
       </div>
     </div>
   );
