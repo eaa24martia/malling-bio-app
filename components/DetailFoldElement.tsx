@@ -1,5 +1,7 @@
 "use client";
 
+import CreateButton from "./CreateButton";
+
 export default function DetailFoldElement() {
   return (
     <div 
@@ -12,6 +14,14 @@ export default function DetailFoldElement() {
         backgroundBlendMode: 'multiply'
       }}
     >
+        <section className="absolute inset-0 flex items-center justify-center mt-[-70]">
+            <div className="relative">
+                <img src="/assets/ticket-element.svg" alt="" className="w-75 h-auto" />
+                <div className="absolute inset-0 flex items-center justify-center mt-[-10]">
+                    <CreateButton href="/seat">Se tider</CreateButton>
+                </div>
+            </div>
+        </section>
     </div>
   );
 }
