@@ -20,7 +20,7 @@ export default function ProfilePicture() {
 
   return (
     <>
-      <div className="flex flex-col items-center mt-20 gap-4">
+      <div className="flex flex-col items-center mt-5 gap-4">
         <button
           onClick={() => setIsModalOpen(true)}
           className="relative group"

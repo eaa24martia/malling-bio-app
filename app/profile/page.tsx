@@ -21,6 +21,9 @@ export default function ProfilePage() {
         </section>
 
         <div className="pt-20">
+            <h1 className="font-bold text-center text-[#192B5A] mb-0 mt-5" style={{ fontSize: '30px' }}>
+            Hej Navn!
+          </h1>
            <ProfilePicture />
         </div>
 
