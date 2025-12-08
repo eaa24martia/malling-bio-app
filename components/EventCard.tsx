@@ -22,7 +22,7 @@ export default function EventElement() {
           </p>
         </div>
 
-        <div className="absolute right-4 top-4 z-20 bg-[#B2182B] text-white px-4 py-3 rounded-xl font-extrabold text-base leading-tight shadow-md">
+        <div className="absolute right-4 top-4 z-5 bg-[#B2182B] text-white px-4 py-3 rounded-xl font-extrabold text-base leading-tight shadow-md">
           <span className="block">Forår</span>
           <span className="block">2026</span>
         </div>
