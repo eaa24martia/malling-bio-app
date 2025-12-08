@@ -1,5 +1,6 @@
 "use client";
 
+import BottomNav from "@/components/BottomNav";
 import EventCard from "@/components/EventCard";
 import RedHeader from "@/components/Header";
 
@@ -38,6 +39,9 @@ export default function EventsPage() {
             <EventCard />
         </section>
     </section>
+
+     {/* Bottom Navigation */}
+            <BottomNav />
 
         
     </main>
