@@ -20,6 +20,7 @@ html, body {
   font-family: var(--font-palanquin, 'Palanquin', sans-serif);
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
+  overflow: hidden; /* Prevent scrolling */
 }
 
 /* === HEADING STYLES === */

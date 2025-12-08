@@ -1,5 +1,6 @@
 "use client";
 
+import EventCard from "@/components/EventCard";
 import RedHeader from "@/components/Header";
 
 export default function EventsPage() {
@@ -23,6 +24,10 @@ export default function EventsPage() {
           </h1>
              <div className="h-0.5 bg-[#192B5A] my-4"></div>
         </div>
+
+        <section>
+            <EventCard />
+        </section>
     </main>
   );
 }
