@@ -4,6 +4,7 @@ import RedHeader from "@/components/Header";
 import BottomNav from "@/components/BottomNav";
 import DetailHeader from "@/components/DetailHeader";
 import DetailDescription from "@/components/DetailDescription";
+import DetailFoldElement from "@/components/DetailFoldElement";
 
 export default function MovieDetailPage() {
   return (
@@ -20,7 +21,7 @@ export default function MovieDetailPage() {
       />
       
       {/* Content layer */}
-      <main className="relative z-10 pb-20">
+      <main className="relative z-10 min-h-screen flex flex-col">
         <section className="relative z-10">
           <RedHeader />
         </section>
@@ -29,7 +30,7 @@ export default function MovieDetailPage() {
             <DetailHeader />
         </section>
 
-        <section className="mt-2 text-center">
+        <section className="text-center">
             <h2 className="text-[24px] font-bold mb-4 text-white">Wicked: Part II</h2>
             <div className="flex gap-2 mb-4 justify-center">
                 <div className="bg-[#B2182B] text-white px-3 py-1 rounded-full text-sm">Fantasy</div>
@@ -37,8 +38,12 @@ export default function MovieDetailPage() {
             </div>
         </section>
 
-        <section className="px-4 mt-8">
+        <section className="px-4 mt-1">
             < DetailDescription />
+        </section>
+
+        <section className="flex-1">
+            <DetailFoldElement />
         </section>
 
         {/* Bottom Navigation */}

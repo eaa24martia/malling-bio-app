@@ -9,7 +9,7 @@ export default function DetailDescription() {
   const fullText = "Wicked: Part II afslutter den episke Broadway-filmatisering med Elphaba og Glinda som nu må konfrontere konsekvenserne af deres valg. Efterhånden som de to veninder navigerer gennem de komplekse udfordringer i deres nye roller, må de også håndtere de personlige og politiske konsekvenser af deres tidligere beslutninger. Filmen udforsker temaer om venskab, magt og de valg der definerer os.";
 
   return (
-    <section className="px-4 mt-8 flex justify-center">
+    <section className="px-4 flex justify-center mb-10">
       <p className="text-white text-sm leading-relaxed text-center max-w-md">
         <span 
           className={isExpanded ? "cursor-pointer" : ""}
