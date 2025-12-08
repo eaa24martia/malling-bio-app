@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_5" data-name="Layer 5" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 200 200">
+  <defs>
+    <style>
+      .cls-1, .cls-2, .cls-3 {
+        fill: none;
+      }
+
+      .cls-2 {
+        stroke-miterlimit: 10;
+      }
+
+      .cls-2, .cls-3 {
+        stroke: #2e5226;
+        stroke-linecap: round;
+        stroke-width: 4px;
+      }
+
+      .cls-4 {
+        fill: url(#linear-gradient);
+      }
+
+      .cls-3 {
+        stroke-linejoin: round;
+      }
+
+      .cls-5 {
+        fill: #cccb2d;
+      }
+
+      .cls-6 {
+        fill: #2e5226;
+      }
+
+      .cls-7 {
+        clip-path: url(#clippath);
+      }
+    </style>
+    <clipPath id="clippath">
+      <rect class="cls-1" width="200" height="200"/>
+    </clipPath>
+    <linearGradient id="linear-gradient" x1="0" y1="140.38" x2="197.09" y2="140.38" gradientUnits="userSpaceOnUse">
+      <stop offset=".03" stop-color="#009f50"/>
+      <stop offset="1" stop-color="#7bc360"/>
+    </linearGradient>
+  </defs>
+  <g class="cls-7">
+    <rect class="cls-5" width="200" height="200"/>
+    <path class="cls-4" d="M196.85,245.32c-2.46,9.45-22.68,13.43-62.19,14.47-37.61.99-131.03,3.46-134.56-17.76-1.84-11.04,22.57-17.1,68.9-59.38,21.34-19.48,43.01-39.56,38.26-49.81-6.91-14.89-60.82,9.81-80.69-13.5-13.14-15.41-5.42-44.79,5.45-61.81,25.11-39.29,90.1-48.69,124.31-22.23,12.98,10.04,18.75,23.09,21.81,30.02,15.64,35.41,3.77,72.82,0,84.7-8.34,26.29-16.82,28.34-15.27,42.98,3.04,28.62,37.41,39.19,33.99,52.33Z"/>
+    <circle class="cls-6" cx="60.2" cy="65.86" r="7.53"/>
+    <rect class="cls-6" x="57.43" y="58.34" width="22.1" height="5.12" rx="2.56" ry="2.56"/>
+    <circle class="cls-6" cx="101.93" cy="65.86" r="7.53"/>
+    <rect class="cls-6" x="99.17" y="58.34" width="22.1" height="5.12" rx="2.56" ry="2.56"/>
+    <path class="cls-2" d="M50.78,52.75c.77-.91,6.3-7.15,15.52-7.15,1.19,0,9.53.14,15.52,7.15"/>
+    <path class="cls-2" d="M95.46,52.75c.77-.91,6.3-7.15,15.52-7.15,1.19,0,9.53.14,15.52,7.15"/>
+    <path class="cls-3" d="M66.3,97.37c5.17-4.24,10.34-8.49,15.52-12.73,5.17,4.24,10.34,8.49,15.52,12.73"/>
+  </g>
+</svg>
