@@ -26,7 +26,7 @@ export default function EventsPage() {
              <div className="h-0.5 bg-[#192B5A] my-4"></div>
         </div>
 
-    <section className="space-y-6 px-6 pb-20">
+    <section className="space-y-6 pb-20 mb-10">
         <section>
             <EventCard />
         </section>

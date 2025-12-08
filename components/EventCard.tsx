@@ -13,7 +13,7 @@ export default function EventElement() {
           className="absolute inset-0 pointer-events-none bg-linear-to-b from-transparent to-[#b2182a9b]"
         />
         
-        <div className="absolute left-6 right-6 bottom-6 z-10 text-white drop-shadow-lg">
+        <div className="absolute left-6 right-6 bottom-6 z-5 text-white drop-shadow-lg">
           <h3 className="m-0 text-3xl sm:text-4xl font-extrabold leading-none">
             Skolebio
           </h3>

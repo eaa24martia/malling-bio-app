@@ -3,6 +3,7 @@
 import BottomNav from "@/components/BottomNav";
 import EventCard from "@/components/EventCard";
 import RedHeader from "@/components/Header";
+import TicketCard from "@/components/TicketContainer";
 
 export default function TicketsPage() {
   return (
@@ -26,17 +27,17 @@ export default function TicketsPage() {
              <div className="h-0.5 bg-[#192B5A] my-4"></div>
         </div>
 
-    <section className="space-y-6 px-6 pb-20">
+    <section className="space-y-6 pb-20 mb-10">
         <section>
-            <EventCard />
+            <TicketCard />
         </section>
 
          <section>
-            <EventCard />
+            <TicketCard />
         </section>
 
           <section>
-            <EventCard />
+            <TicketCard />
         </section>
     </section>
 
