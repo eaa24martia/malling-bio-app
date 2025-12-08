@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import CreateButton from "./CreateButton";
+import Modal from "./Modal";
 
 export default function SettingElement() {
   const [isHighContrast, setIsHighContrast] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <div 
@@ -52,6 +54,7 @@ export default function SettingElement() {
 
         {/* Om Malling Bio button */}
         <button 
+          onClick={() => setIsModalOpen(true)}
           className="w-full p-4 flex items-center justify-between group"
         >
           <h3 className="text-white text-[20px] font-bold">Om Malling Bio</h3>
@@ -64,6 +67,16 @@ export default function SettingElement() {
       <div className="flex justify-center mt-8 pb-8">
         <CreateButton href="/">Log ud</CreateButton>
       </div>
+
+      {/* Om Malling Bio Modal */}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title="Om Malling Bio"
+        size="md"
+      >
+       
+      </Modal>
     </div>
   );
 }
