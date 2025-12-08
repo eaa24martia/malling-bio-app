@@ -3,6 +3,7 @@
 import BottomNav from "@/components/BottomNav";
 import RedHeader from "@/components/Header";
 import ProfilePicture from "@/components/ProfilePicture";
+import SettingElement from "@/components/SettingElement";
 
 export default function ProfilePage() {
   return (
@@ -22,6 +23,10 @@ export default function ProfilePage() {
         <div className="pt-20">
            <ProfilePicture />
         </div>
+
+        <section>
+            <SettingElement />
+        </section>
 
      {/* Bottom Navigation */}
             <BottomNav />
