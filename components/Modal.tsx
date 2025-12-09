@@ -126,7 +126,7 @@ export default function Modal({
   }}
 >
   {/* header */}
-  
+
    <div className="flex items-center justify-center h-[55px] bg-[#B2182B] px-4 md:px-5">
 
      <button
@@ -135,7 +135,7 @@ export default function Modal({
   className="absolute left-4 p-2"
 >
   <img 
-    src="assets/white-close.svg" 
+    src="/assets/white-close.svg" 
     alt="Luk" 
     className="w-5 h-5"
   />
@@ -148,7 +148,7 @@ export default function Modal({
 
         {/* body */}
         <div 
-          className="p-4 h-[796px] md:p-6 text-white overflow-auto"
+          className="h-[796px] md:p-6 text-white overflow-auto"
           style={{
             background: 'linear-gradient(to bottom, #320006, #B2182B), url(/assets/backgrounds-3.svg)',
             backgroundSize: 'cover, cover',
