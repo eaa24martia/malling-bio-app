@@ -54,7 +54,7 @@ export default function HomePage() {
         {/* Events Section */}
         <section className="mb-2.5">
           <h2 className="text-white text-[16px] font-bold mb-2 drop-shadow-lg pl-4 pt-0">
-            Det sker i malling Bio
+            Det sker i Malling Bio
           </h2>
           <EventsSlider />
         </section>
