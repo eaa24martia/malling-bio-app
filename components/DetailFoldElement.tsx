@@ -42,6 +42,7 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSeatModalOpen, setIsSeatModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [isTicketConfirmationOpen, setIsTicketConfirmationOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
 
   // Selected seats state
@@ -625,7 +626,57 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
       {/* Payment Modal */}
       <Modal isOpen={isPaymentModalOpen} onClose={() => setIsPaymentModalOpen(false)} title="Betaling" size="md">
         <div className="relative min-h-full bg-[#410c1082] px-4 md:px-6 pb-4">
-          <PaymentContainer />
+          <PaymentContainer 
+            onPaymentSuccess={() => {
+              setIsPaymentModalOpen(false);
+              setIsTicketConfirmationOpen(true);
+            }}
+          />
+        </div>
+      </Modal>
+
+      {/* Ticket Confirmation Modal */}
+      <Modal isOpen={isTicketConfirmationOpen} onClose={() => setIsTicketConfirmationOpen(false)} title="Din billet" size="md">
+        <div className="relative min-h-full bg-[#410c1082] px-4 md:px-6 pb-4">
+          <div className="text-center py-8">
+            <div className="mb-6">
+              <div className="text-white text-xl font-bold mb-2">{movieTitle}</div>
+              {selectedShowtime && (
+                <>
+                  <div className="text-white/80 text-sm mb-1">
+                    {getDayLabel(selectedShowtime.datetime)} {formatDate(selectedShowtime.datetime)} - {formatTime(selectedShowtime.datetime)}
+                  </div>
+                  <div className="text-white/80 text-sm mb-1">
+                    {selectedShowtime.auditorium} • {selectedShowtime.language}
+                  </div>
+                </>
+              )}
+            </div>
+
+            <div className="bg-[#F5E6D3] rounded-lg p-4 mb-6">
+              <h3 className="text-[#B2182B] font-bold mb-3">Dine sæder:</h3>
+              <div className="flex flex-wrap gap-2 justify-center">
+                {selectedSeatsList.map((s, i) => (
+                  <div key={i} className="bg-[#B2182B] text-white px-3 py-1 rounded-full text-sm">
+                    Række {s.row}, Sæde {s.seat}
+                  </div>
+                ))}
+              </div>
+              {selectedShowtime && (
+                <div className="mt-4 text-[#B2182B] font-bold text-lg">
+                  Total: {selectedSeatsList.length * selectedShowtime.price} kr.
+                </div>
+              )}
+            </div>
+
+            <div className="text-white/70 text-sm mb-6">
+              Din billet er blevet sendt til din e-mail
+            </div>
+
+            <CreateButton onClick={() => setIsTicketConfirmationOpen(false)}>
+              Færdig
+            </CreateButton>
+          </div>
         </div>
       </Modal>
     </>

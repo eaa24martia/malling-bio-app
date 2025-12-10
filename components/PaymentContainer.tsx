@@ -4,7 +4,11 @@ import { useState } from "react";
 import Input from "./Input";
 import CreateButton from "./CreateButton";
 
-export default function PaymentContainer() {
+interface PaymentContainerProps {
+  onPaymentSuccess?: () => void;
+}
+
+export default function PaymentContainer({ onPaymentSuccess }: PaymentContainerProps) {
   const [cardNumber, setCardNumber] = useState("");
   const [expiryDate, setExpiryDate] = useState("");
   const [cvv, setCvv] = useState("");
@@ -13,7 +17,10 @@ export default function PaymentContainer() {
   function handleSubmit(e?: React.FormEvent) {
     e?.preventDefault();
     console.log("Submitted:", { cardNumber, expiryDate, cvv, cardholderName });
-    // TODO: Navigate to ticket modal/page after successful payment
+    // Simulate successful payment and trigger callback
+    if (onPaymentSuccess) {
+      onPaymentSuccess();
+    }
   }
 
   return (
