@@ -1,15 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import Input from "./Input"; // <-- make sure this path is correct
+import Input from "./Input";
+import CreateButton from "./CreateButton";
 
 export default function PaymentContainer() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [cardNumber, setCardNumber] = useState("");
+  const [expiryDate, setExpiryDate] = useState("");
+  const [cvv, setCvv] = useState("");
+  const [cardholderName, setCardholderName] = useState("");
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    console.log("Submitted:", { email, password });
+  function handleSubmit(e?: React.FormEvent) {
+    e?.preventDefault();
+    console.log("Submitted:", { cardNumber, expiryDate, cvv, cardholderName });
+    // TODO: Navigate to ticket modal/page after successful payment
   }
 
   return (
@@ -17,41 +21,66 @@ export default function PaymentContainer() {
       <div className="bg-[#FEEFE0] rounded-xl shadow-lg h-[445px] w-[365px] flex flex-col items-center -translate-y-20 pt-6 px-6">
         
         {/* Title */}
-        <p className="text-[#192B53] text-xl font-bold mb-4">Kreditkort</p>
+        <h2 className="text-[#192B53] text-[24px] font-bold mb-4">Kreditkort</h2>
 
         {/* Form */}
-        <form id="loginForm" onSubmit={handleSubmit} className="w-full space-y-4">
+        <form id="paymentForm" onSubmit={handleSubmit} className="w-full space-y-4">
           <Input
-            id="email"
-            label="E-mail"
-            type="email"
-            value={email}
+            id="cardNumber"
+            label="Kortnummer"
+            type="text"
+            value={cardNumber}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setEmail(e.target.value)
+              setCardNumber(e.target.value)
             }
-            placeholder="din@gmail.com"
+            placeholder="1234 5678 9012 3456"
             required
           />
 
+          <section className="flex flex-row gap-5 justify-center">
+            <Input
+              id="expiryDate"
+              label="Udløbsdato"
+              type="text"
+              value={expiryDate}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setExpiryDate(e.target.value)
+              }
+              placeholder="MM/ÅÅ"
+              required
+            />
+
+            <Input
+              id="cvv"
+              label="Sikkerhedskode"
+              type="text"
+              value={cvv}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setCvv(e.target.value)
+              }
+              placeholder="123"
+              required
+            />
+          </section>
+
           <Input
-            id="password"
-            label="Adgangskode"
-            type="password"
-            value={password}
+            id="cardholderName"
+            label="Kortholderens navn"
+            type="text"
+            value={cardholderName}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setPassword(e.target.value)
+              setCardholderName(e.target.value)
             }
-            placeholder="••••••••"
+            placeholder="Navn på kort"
             required
           />
 
           {/* Submit Button */}
-          <button
-            type="submit"
-            className="w-full bg-[#192B53] text-white font-semibold py-2 rounded-lg hover:opacity-90 transition"
-          >
-            Betal
-          </button>
+          <div className="pt-2 flex justify-center">
+            <CreateButton onClick={handleSubmit}>
+              Betal
+            </CreateButton>
+          </div>
         </form>
 
       </div>

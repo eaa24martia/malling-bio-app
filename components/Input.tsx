@@ -29,7 +29,7 @@ export default function Input({
         onChange={onChange}
         required={required}
         placeholder={placeholder}
-        className="w-full px-3 py-3 border-2 text-[14px] border-[#B2182B] rounded-[15px] bg-white focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:border-transparent"
+        className="w-full px-3 py-3 border-2 text-[14px] text-[#192B5A] border-[#B2182B] rounded-[15px] bg-white focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:border-transparent placeholder:text-gray-400"
         style={{ fontFamily: 'var(--font-dosis)', fontWeight: '650' }}
       />
     </div>
