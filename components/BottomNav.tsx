@@ -54,7 +54,13 @@ export default function BottomNav() {
     return () => unsubscribe();
   }, []);
 
-  const isActive = (path: string) => pathname === path;
+  const isActive = (path: string) => {
+    if (path === '/home') {
+      // Home is active for /home and /movie/[id] routes
+      return pathname === '/home' || pathname?.startsWith('/movie/');
+    }
+    return pathname === path;
+  };
 
   return (
     <section className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-[#ffffff] z-50 shadow-lg rounded-[50px]" style={{ width: '361px', height: '62px' }}>

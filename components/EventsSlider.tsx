@@ -17,7 +17,7 @@ const SLIDES: Slide[] = [
   },
   {
     id: 1,
-    image: "https://external-cph2-1.xx.fbcdn.net/emg1/v/t13/18249289209127382969?url=http%3A%2F%2Fmallingbio.dk%2Fmedia%2F1099%2F465790983_9687367834622838_4135184098306194493_n.jpg%3Fcenter%3D0.576072821846554%2C0.50166666666666671%26amp%3Bmode%3Dcrop%26amp%3Bwidth%3D1200%26amp%3Bheight%3D630%26amp%3Brnd%3D134037450400000000&fb_obo=1&utld=mallingbio.dk&stp=c0.5000x0.5000f_dst-jpg_flffffff_p1000x522_q75_tt6&_nc_gid=HpLzTHkGKQGYmo0FviLm_Q&_nc_oc=AdkY5K4zvN1G2AGJmVO_rYrT6jGX6zZ3AJcmQN6h2GnxWkm8BTCCyaaaxvkqS_b-Z8Q&ccb=13-1&oh=06_Q3-5ASabM7lxJXYIo_uLhjvp4w6Q40mDsKqQrgTffLbT5PK9&oe=69376037&_nc_sid=c97757",
+    image: "https://external-cph2-1.xx.fbcdn.net/emg1/v/t13/18249289209127382969?url=http%3A%2F%2Fmallingbio.dk%2Fmedia%2F1099%2F465790983_9687367834622838_4135184098306194493_n.jpg%3Fcenter%3D0.576072821846554%2C0.50166666666666671%26amp%3Bmode%3Dcrop%26amp%3Bwidth%3D1200%26amp%3Bheight%3D630%26amp%3Brnd%3D134037450400000000&fb_obo=1&utld=mallingbio.dk&stp=c0.5000x0.5000f_dst-jpg_flffffff_p1000x522_q75_tt6&_nc_gid=OxDm7qaXEFnNNeQ1N5-L2Q&_nc_oc=AdkBMEtof-Oth1D1zoTZgxhgDNz3o9WFzc_iB0VVHjUKbura1tPQMg-4wr66wgR3xjo&ccb=13-1&oh=06_Q3-6AW9QSFbYtHB8x4h_IJxDe9VKLvsFxTAWBefyQdcKJtsI&oe=693B54B7&_nc_sid=c97757",
     title: "Baby Bio",
   },
   {
