@@ -1,12 +1,37 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/lib/firebase";
+import { signOutUser } from "@/lib/auth";
 import CreateButton from "./CreateButton";
 import Modal from "./Modal";
 
 export default function SettingElement() {
   const [isHighContrast, setIsHighContrast] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [userEmail, setUserEmail] = useState<string>("");
+  const router = useRouter();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserEmail(user.email || "");
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await signOutUser();
+      router.push("/login");
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
 
   return (
     <div 
@@ -65,7 +90,7 @@ export default function SettingElement() {
 
         <div className="h-px bg-white my-6 mb-4"></div>
       <div className="flex justify-center mt-8 pb-8">
-        <CreateButton href="/">Log ud</CreateButton>
+        <CreateButton onClick={handleLogout}>Log ud</CreateButton>
       </div>
 
       {/* Om Malling Bio Modal */}

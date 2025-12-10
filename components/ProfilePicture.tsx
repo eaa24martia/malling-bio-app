@@ -1,6 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { auth, db } from "@/lib/firebase";
 
 const profilePictures = [
   { id: 1, src: "/assets/kissy-profile.svg" },
@@ -12,10 +15,51 @@ const profilePictures = [
 export default function ProfilePicture() {
   const [selectedPicture, setSelectedPicture] = useState(profilePictures[0]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
 
-  const handleSelectPicture = (picture: typeof profilePictures[0]) => {
+  // Load user's saved profile picture
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        setUserId(user.uid);
+        try {
+          const userDoc = await getDoc(doc(db, "users", user.uid));
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            if (userData.profilePictureId) {
+              const savedPicture = profilePictures.find(
+                (p) => p.id === userData.profilePictureId
+              );
+              if (savedPicture) {
+                setSelectedPicture(savedPicture);
+              }
+            }
+          }
+        } catch (error) {
+          console.error("Error loading profile picture:", error);
+        }
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const handleSelectPicture = async (picture: typeof profilePictures[0]) => {
     setSelectedPicture(picture);
     setIsModalOpen(false);
+
+    // Save to Firebase
+    if (userId) {
+      try {
+        await setDoc(
+          doc(db, "users", userId),
+          { profilePictureId: picture.id },
+          { merge: true }
+        );
+      } catch (error) {
+        console.error("Error saving profile picture:", error);
+      }
+    }
   };
 
   return (
