@@ -5,6 +5,7 @@ import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import CreateButton from "./CreateButton";
 import Modal from "./Modal";
+import PaymentContainer from "./PaymentContainer";
 
 type Seat = { row: number; seat: number };
 
@@ -624,9 +625,7 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
       {/* Payment Modal */}
       <Modal isOpen={isPaymentModalOpen} onClose={() => setIsPaymentModalOpen(false)} title="Betaling" size="md">
         <div className="relative min-h-full bg-[#410c1082] px-4 md:px-6 pb-4">
-          
-         
-         
+          <PaymentContainer />
         </div>
       </Modal>
     </>
