@@ -2,11 +2,20 @@
 
 import { useState } from "react";
 
-export default function DetailDescription() {
+interface Movie {
+  shortDescription: string;
+  longDescription: string;
+}
+
+interface DetailDescriptionProps {
+  movie: Movie;
+}
+
+export default function DetailDescription({ movie }: DetailDescriptionProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const shortText = "Wicked: Part II afslutter den episke Broadway-filmatisering med Elphaba og Glinda som nu må konfrontere konsekvenserne af deres valg...";
-  const fullText = "Wicked: Part II afslutter den episke Broadway-filmatisering med Elphaba og Glinda som nu må konfrontere konsekvenserne af deres valg. Efterhånden som de to veninder navigerer gennem de komplekse udfordringer i deres nye roller, må de også håndtere de personlige og politiske konsekvenser af deres tidligere beslutninger. Filmen udforsker temaer om venskab, magt og de valg der definerer os.";
+  const shortText = movie.shortDescription || movie.longDescription.substring(0, 150) + "...";
+  const fullText = movie.longDescription;
 
   return (
     <section className="px-4 flex justify-center mb-10">
@@ -17,7 +26,7 @@ export default function DetailDescription() {
         >
           {isExpanded ? fullText : shortText}
         </span>
-        {!isExpanded && (
+        {!isExpanded && fullText !== shortText && (
           <button 
             onClick={() => setIsExpanded(true)}
             className="text-[#C40023] ml-2 hover:text-red-400 transition-colors"

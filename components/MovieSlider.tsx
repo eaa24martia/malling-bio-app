@@ -1,63 +1,22 @@
 // components/MovieSlider.tsx
 "use client";
 
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import useEmblaCarousel from "embla-carousel-react";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
-type Slide = {
-  id: number;
-  image: string;
+type Movie = {
+  id: string;
   title: string;
+  posterUrl: string;
+  slug: string;
 };
 
-const SLIDES: Slide[] = [
-  {
-    id: 0,
-    image: "https://poster.ebillet.dk/Zootropolis2Ny-2025.large.jpg",
-    title: "Zootropolis 2",
-  },
-  {
-    id: 1,
-    image: "https://poster.ebillet.dk/IngenKaereMor-2025.large.jpg",
-    title: "Ingen Kære Mor",
-  },
-  {
-    id: 2,
-    image: "https://poster.ebillet.dk/musenes-jul-2025.large.jpg",
-    title: "Musenes Jul",
-  },
-  {
-    id: 3,
-    image: "https://poster.ebillet.dk/DenSidsteViking-Citat-2025.large.jpg",
-    title: "Den Sidste Viking",
-  },
-  {
-    id: 4,
-    image: "https://poster.ebillet.dk/nurnberg-2025.large.jpg",
-    title: "Nürnberg",
-  },
-  {
-    id: 5,
-    image: "https://poster.ebillet.dk/imstillhere2025pris.large.jpg",
-    title: "I'm Still Here",
-  },
-  {
-    id: 6,
-    image: "https://poster.ebillet.dk/detnyeaar2025.large.jpg",
-    title: "Det Nye År",
-  },
-  {
-    id: 7,
-    image: "https://poster.ebillet.dk/APrivateLife-DK-2025.large.jpg",
-    title: "A Private Life",
-  },
-  {
-    id: 8,
-    image: "https://poster.ebillet.dk/mira2025.large.jpg",
-    title: "Mira",
-  },
-];
-
 export default function MovieSlider() {
+  const router = useRouter();
+  const [movies, setMovies] = useState<Movie[]>([]);
   const [emblaRef] = useEmblaCarousel({ 
     align: "start", 
     loop: false,
@@ -67,24 +26,57 @@ export default function MovieSlider() {
     duration: 25
   });
 
+  // Load current movies from Firestore
+  useEffect(() => {
+    const loadMovies = async () => {
+      try {
+        const moviesRef = collection(db, "movies");
+        const snapshot = await getDocs(moviesRef);
+        const moviesData = snapshot.docs.map(doc => ({
+          id: doc.id,
+          title: doc.data().title,
+          posterUrl: doc.data().posterUrl,
+          slug: doc.data().slug,
+        } as Movie));
+        setMovies(moviesData);
+      } catch (error) {
+        console.error("Error loading movies:", error);
+      }
+    };
+
+    loadMovies();
+  }, []);
+
+  const handleMovieClick = (movie: Movie) => {
+    // Navigate to movie detail page using ID
+    router.push(`/movie/${movie.id}`);
+  };
+
   return (
     <div className="w-full px-2">
       {/* VIEWPORT */}
       <div className="overflow-hidden" ref={emblaRef}>
         {/* TRACK / CONTAINER */}
         <div className="flex gap-4">
-          {SLIDES.map((slide) => (
-            <div key={slide.id} className="flex-none">
-              {/* MOVIE POSTER CARD */}
-              <div className="h-[150px] w-[104px] rounded-lg overflow-hidden shadow-lg">
-                <img 
-                  src={slide.image} 
-                  alt={slide.title} 
-                  className="w-full h-full object-cover"
-                />
+          {movies.length === 0 ? (
+            <div className="text-white/50 text-sm px-4">Ingen film tilgængelig</div>
+          ) : (
+            movies.map((movie) => (
+              <div key={movie.id} className="flex-none">
+                {/* MOVIE POSTER CARD */}
+                <button
+                  onClick={() => handleMovieClick(movie)}
+                  className="h-[150px] w-[104px] rounded-lg overflow-hidden shadow-lg hover:scale-105 transition-transform cursor-pointer"
+                >
+                  <img
+                    src={movie.posterUrl} 
+                    alt={movie.title} 
+                    className="w-full h-full object-cover"
+                  />
+                </button>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
     </div>

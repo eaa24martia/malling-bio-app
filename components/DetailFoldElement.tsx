@@ -1,50 +1,159 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 import CreateButton from "./CreateButton";
 import Modal from "./Modal";
 
 type Seat = { row: number; seat: number };
 
-export default function DetailFoldElement() {
+interface Showtime {
+  id: string;
+  movieId: string;
+  datetime: Date;
+  auditorium: string;
+  language: string;
+  price: number;
+  totalSeats: number;
+  seatsAvailable: number;
+  seatMap: SeatStatus[] | SeatStatus[][]; // Support both flat and 2D arrays
+  seatMapRows?: number;
+  seatMapCols?: number;
+  status: "on_sale" | "cancelled";
+}
+
+interface SeatStatus {
+  row: number;
+  seat: number;
+  status: "available" | "taken" | "handicap";
+}
+
+interface DetailFoldElementProps {
+  movieId: string;
+  movieTitle: string;
+  moviePosterUrl: string;
+}
+
+export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl }: DetailFoldElementProps) {
+  const [showtimes, setShowtimes] = useState<Showtime[]>([]);
+  const [selectedShowtime, setSelectedShowtime] = useState<Showtime | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSeatModalOpen, setIsSeatModalOpen] = useState(false);
-  const [selectedDate, setSelectedDate] = useState("05/12");
-  const [selectedTime, setSelectedTime] = useState("");
+  const [selectedDate, setSelectedDate] = useState("");
 
   // Selected seats state
-  const [selectedSeatsList, setSelectedSeatsList] = useState<Seat[]>([
-    { row: 2, seat: 4 },
-    { row: 2, seat: 5 },
-  ]);
+  const [selectedSeatsList, setSelectedSeatsList] = useState<Seat[]>([]);
 
-  // Sample dates and times data
-  const dates = [
-    { label: "I dag", value: "03/12" },
-    { label: "Tors.", value: "04/12" },
-    { label: "Fre.", value: "05/12" },
-    { label: "Lør.", value: "06/12" },
-    { label: "Søn.", value: "07/12" },
-    { label: "Man.", value: "08/12" },
-  ];
+  useEffect(() => {
+    loadShowtimes();
+  }, [movieId]);
 
-  const times = [
-    { time: "12.30", language: "Eng. tale", availability: "available" }, // green
-    { time: "14.00", language: "Eng. tale", availability: "medium" }, // yellow
-    { time: "20.00", language: "Eng. tale", availability: "low" }, // red
-  ];
-
-  const getTimeColor = (availability: string) => {
-    switch (availability) {
-      case "available":
-        return "bg-[#4CAF50]"; // green
-      case "medium":
-        return "bg-[#FFC107]"; // yellow
-      case "low":
-        return "bg-[#F44336]"; // red
-      default:
-        return "bg-gray-500";
+  const loadShowtimes = async () => {
+    try {
+      const showtimesRef = collection(db, "showtimes");
+      const q = query(
+        showtimesRef, 
+        where("movieId", "==", movieId),
+        where("status", "==", "on_sale")
+      );
+      const snapshot = await getDocs(q);
+      const showtimesData = snapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          ...data,
+          datetime: data.datetime?.toDate(),
+        } as Showtime;
+      });
+      setShowtimes(showtimesData.sort((a, b) => a.datetime.getTime() - b.datetime.getTime()));
+      
+      // Set initial selected date to first showtime date
+      if (showtimesData.length > 0) {
+        const firstDate = formatDate(showtimesData[0].datetime);
+        setSelectedDate(firstDate);
+      }
+    } catch (error) {
+      console.error("Error loading showtimes:", error);
     }
+  };
+
+  const formatDate = (date: Date) => {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    return `${day}/${month}`;
+  };
+
+  const formatTime = (date: Date) => {
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${hours}.${minutes}`;
+  };
+
+  const getDayLabel = (date: Date) => {
+    const days = ['Søn.', 'Man.', 'Tirs.', 'Ons.', 'Tors.', 'Fre.', 'Lør.'];
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const checkDate = new Date(date);
+    checkDate.setHours(0, 0, 0, 0);
+    
+    if (checkDate.getTime() === today.getTime()) return 'I dag';
+    return days[date.getDay()];
+  };
+
+  const getUniqueDates = () => {
+    const dateSet = new Set<string>();
+    return showtimes.filter(st => {
+      const dateStr = formatDate(st.datetime);
+      if (dateSet.has(dateStr)) return false;
+      dateSet.add(dateStr);
+      return true;
+    }).map(st => ({
+      label: getDayLabel(st.datetime),
+      value: formatDate(st.datetime),
+      date: st.datetime
+    }));
+  };
+
+  const getShowtimesForDate = (dateStr: string) => {
+    return showtimes.filter(st => formatDate(st.datetime) === dateStr);
+  };
+
+  const getAvailabilityColor = (showtime: Showtime) => {
+    const percentAvailable = (showtime.seatsAvailable / showtime.totalSeats) * 100;
+    if (percentAvailable > 50) return "bg-[#4CAF50]"; // green
+    if (percentAvailable > 20) return "bg-[#FFC107]"; // yellow
+    return "bg-[#F44336]"; // red
+  };
+
+  const handleSelectShowtime = (showtime: Showtime) => {
+    setSelectedShowtime(showtime);
+    setIsModalOpen(false);
+    setIsSeatModalOpen(true);
+    setSelectedSeatsList([]); // Reset selected seats
+  };
+
+  // Convert flat seat array to 2D array
+  const convertToSeatMap = (showtime: Showtime): SeatStatus[][] => {
+    const seatMap = showtime.seatMap;
+    
+    // If already 2D array, return as is
+    if (Array.isArray(seatMap) && seatMap.length > 0 && Array.isArray(seatMap[0])) {
+      return seatMap as SeatStatus[][];
+    }
+    
+    // Convert flat array to 2D array
+    const flatSeats = seatMap as SeatStatus[];
+    const rows = showtime.seatMapRows || 8;
+    const cols = showtime.seatMapCols || 12;
+    const result: SeatStatus[][] = [];
+    
+    for (let i = 0; i < rows; i++) {
+      const rowSeats = flatSeats.slice(i * cols, (i + 1) * cols);
+      result.push(rowSeats);
+    }
+    
+    return result;
   };
 
   /* ----- Helper: toggle seat in selectedSeatsList ----- */
@@ -101,7 +210,13 @@ export default function DetailFoldElement() {
           <div className="relative">
             <img src="/assets/ticket-element.svg" alt="" className="w-75 h-auto" />
             <div className="absolute inset-0 flex items-center justify-center mt-[-10]">
-              <CreateButton onClick={() => setIsModalOpen(true)}>Se tider</CreateButton>
+              {showtimes.length > 0 ? (
+                <CreateButton onClick={() => setIsModalOpen(true)}>Se tider</CreateButton>
+              ) : (
+                <div className="text-white text-center">
+                  <p className="text-sm">Ingen forestillinger tilgængelige</p>
+                </div>
+              )}
             </div>
           </div>
         </section>
@@ -114,7 +229,7 @@ export default function DetailFoldElement() {
           <section className="pt-6 pb-4">
             <h3 className="text-white text-sm font-semibold mb-3">Datoer</h3>
             <div className="flex gap-2 overflow-x-auto pb-2">
-              {dates.map((date) => (
+              {getUniqueDates().map((date) => (
                 <button
                   key={date.value}
                   onClick={() => setSelectedDate(date.value)}
@@ -137,31 +252,30 @@ export default function DetailFoldElement() {
             {/* Movie Poster */}
             <div className="shrink-0">
               <img
-                src="https://image.tmdb.org/t/p/w500/xDGbZ0JJ3mYaGKy4Nzd9Kph6M9L.jpg"
-                alt="Wicked: Part II"
+                src={moviePosterUrl}
+                alt={movieTitle}
                 className="w-32 h-44 object-cover rounded-lg"
               />
             </div>
 
             {/* Times */}
             <div className="flex-1 overflow-hidden">
-              <h4 className="text-white text-[20px] font-bold mb-4">Wicked: Part II</h4>
+              <h4 className="text-white text-[20px] font-bold mb-4">{movieTitle}</h4>
               <div className="flex gap-3 overflow-x-auto pb-2 -mr-4 pr-4">
-                {times.map((timeSlot, index) => (
+                {getShowtimesForDate(selectedDate).map((showtime) => (
                   <button
-                    key={index}
-                    onClick={() => {
-                      setSelectedTime(timeSlot.time);
-                      setIsModalOpen(false);
-                      setIsSeatModalOpen(true);
-                    }}
-                    className={`${getTimeColor(timeSlot.availability)} text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity shrink-0 min-w-[110px]`}
+                    key={showtime.id}
+                    onClick={() => handleSelectShowtime(showtime)}
+                    className={`${getAvailabilityColor(showtime)} text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity shrink-0 min-w-[110px]`}
                   >
-                    <div className="text-xl">{timeSlot.time}</div>
-                    <div className="text-xs opacity-90">{timeSlot.language}</div>
+                    <div className="text-xl">{formatTime(showtime.datetime)}</div>
+                    <div className="text-xs opacity-90">{showtime.language}</div>
                   </button>
                 ))}
               </div>
+              {getShowtimesForDate(selectedDate).length === 0 && (
+                <p className="text-white/70 text-sm">Ingen forestillinger denne dag</p>
+              )}
             </div>
           </section>
         </div>
@@ -208,12 +322,12 @@ export default function DetailFoldElement() {
 
         {/* Seat Grid — fixed slot size so rows look identical */}
 <section className="space-y-1 px-4 mb-3 flex-1 overflow-y-auto mt-4">
-  {(() => {
-    const takenSeats = new Set(["1-3", "4-6", "4-7"]);
+  {selectedShowtime && (() => {
+    const seatMap = convertToSeatMap(selectedShowtime);
 
-    return seatRows.map((count, rowIndex) => {
+    return seatMap.map((rowSeats, rowIndex) => {
       const rowNumber = rowIndex + 1;
-      if (count === 0) return <div key={rowIndex} className="h-3" />;
+      if (rowSeats.length === 0) return <div key={rowIndex} className="h-3" />;
 
       // Extra spacing before row 8
       const isRow8 = rowNumber === 8;
@@ -221,12 +335,11 @@ export default function DetailFoldElement() {
 
       return (
         <div key={rowIndex} className={rowClass}>
-          {[...Array(count)].map((_, seatIndex) => {
-            const seatNumber = seatIndex + 1;
-            const seatKey = `${rowNumber}-${seatNumber}`;
-            const selected = isSeatSelected(rowNumber, seatNumber);
-            const isTaken = takenSeats.has(seatKey);
-            const isHandicap = rowNumber === 7 && (seatNumber === 11 || seatNumber === 12);
+          {rowSeats.map((seatData, seatIndex) => {
+            const { row, seat, status } = seatData;
+            const selected = isSeatSelected(row, seat);
+            const isTaken = status === "taken";
+            const isHandicap = status === "handicap";
 
             let imgSrc = "/assets/seat-red.svg";
             if (isTaken) imgSrc = "/assets/seat-indigo.svg";
@@ -235,7 +348,7 @@ export default function DetailFoldElement() {
 
             const onClick = () => {
               if (isTaken) return;
-              toggleSeatSelection(rowNumber, seatNumber);
+              toggleSeatSelection(row, seat);
             };
 
             return (
@@ -245,7 +358,7 @@ export default function DetailFoldElement() {
                   type="button"
                   onClick={onClick}
                   aria-pressed={selected}
-                  aria-label={`Række ${rowNumber} sæde ${seatNumber}`}
+                  aria-label={`Række ${row} sæde ${seat}`}
                   className={`w-5 h-5 flex items-center justify-center rounded-md transition`}
                 >
                   <img src={imgSrc} alt="seat" className="w-4 h-4" />
@@ -298,12 +411,18 @@ export default function DetailFoldElement() {
 
               <div className="text-[#B2182B] flex-center flex-row">
                 <div className="text-[12px]">Inkl. gebyr</div>
-                <div className="text-[15px] font-bold">200 kr.</div>
+                <div className="text-[15px] font-bold">
+                  {selectedShowtime ? selectedSeatsList.length * selectedShowtime.price : 0} kr.
+                </div>
               </div>
 
               <CreateButton
                 size="small"
                 onClick={() => {
+                  if (selectedSeatsList.length === 0) {
+                    alert("Vælg venligst mindst ét sæde");
+                    return;
+                  }
                   setIsSeatModalOpen(false);
                   window.location.href = "/payment";
                 }}

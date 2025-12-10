@@ -3,50 +3,49 @@
 
 import useEmblaCarousel from "embla-carousel-react";
 import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { collection, query, where, orderBy, getDocs } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
-type Slide = {
-  id: number;
-  image: string;
+type Movie = {
+  id: string;
   title: string;
-  text: string;
+  posterUrl: string;
+  isPopular: boolean;
+  popularOrder?: number;
 };
 
-const SLIDES: Slide[] = [
-  {
-    id: 0,
-    image: "https://poster.ebillet.dk/Zootropolis2Ny-2025.large.jpg",
-    title: "Zootropolis 2",
-    text: "",
-  },
-  {
-    id: 1,
-    image: "https://poster.ebillet.dk/musenes-jul-2025.large.jpg",
-    title: "Musenes Jul",
-    text: "",
-  },
-  {
-    id: 2,
-    image: "https://poster.ebillet.dk/DenSidsteViking-Citat-2025.large.jpg",
-    title: "Den Sidste Viking",
-    text: "",
-  },
-  {
-    id: 3,
-    image: "https://poster.ebillet.dk/DyrenesMagiskeDK-2025.large.jpg",
-    title: "Dyrenes Magiske Jul",
-    text: "",
-  },
-  {
-    id: 4,
-    image: "https://poster.ebillet.dk/imstillhere2025pris.large.jpg",
-    title: "I'm Still Here",
-    text: "",
-  },
-];
-
 export default function WelcomeCarousel() {
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const router = useRouter();
   const [emblaRef, emblaApi] = useEmblaCarousel({ align: "center", loop: true });
   const [selectedIndex, setSelectedIndex] = useState(0);
+
+  useEffect(() => {
+    loadPopularMovies();
+  }, []);
+
+  const loadPopularMovies = async () => {
+    try {
+      const moviesRef = collection(db, "movies");
+      const q = query(moviesRef, where("isPopular", "==", true));
+      const snapshot = await getDocs(q);
+      const moviesData = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      } as Movie));
+      
+      // Sort by popularOrder
+      const sortedMovies = moviesData.sort((a, b) => (a.popularOrder || 0) - (b.popularOrder || 0));
+      setMovies(sortedMovies);
+    } catch (error) {
+      console.error("Error loading popular movies:", error);
+    }
+  };
+
+  const handleMovieClick = (movie: Movie) => {
+    router.push(`/movie/${movie.id}`);
+  };
 
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
@@ -79,12 +78,13 @@ export default function WelcomeCarousel() {
     <div className="w-full">
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">
-          {SLIDES.map((slide) => (
-            <div key={slide.id} className="min-w-full mt-[79px]">
-              <div 
-                className="w-full h-60 flex flex-col items-center justify-center p-4 relative"
+          {movies.map((movie) => (
+            <div key={movie.id} className="min-w-full mt-[79px]">
+              <button
+                onClick={() => handleMovieClick(movie)}
+                className="w-full h-60 flex flex-col items-center justify-center p-4 relative cursor-pointer"
                 style={{
-                  backgroundImage: `url(${slide.image})`,
+                  backgroundImage: `url(${movie.posterUrl})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                   backgroundRepeat: 'no-repeat'
@@ -95,8 +95,8 @@ export default function WelcomeCarousel() {
                 <div className="relative z-10 flex items-center justify-between w-full px-6">
                   <div className="shrink-0">
                     <img 
-                      src={slide.image} 
-                      alt={slide.title} 
+                      src={movie.posterUrl} 
+                      alt={movie.title} 
                       className="h-[200px] w-auto object-contain shadow-2xl rounded-lg"
                     />
                   </div>
@@ -106,11 +106,11 @@ export default function WelcomeCarousel() {
                       Populært nu:
                     </p>
                     <h2 className="text-white text-[24px] font-bold mb-2 drop-shadow-lg">
-                      {slide.title}
+                      {movie.title}
                     </h2>
                   </div>
                 </div>
-              </div>
+              </button>
             </div>
           ))}
         </div>

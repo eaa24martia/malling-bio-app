@@ -1,48 +1,22 @@
 
 "use client";
 
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import useEmblaCarousel from "embla-carousel-react";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
-type Slide = {
-  id: number;
-  image: string;
+type Movie = {
+  id: string;
   title: string;
+  posterUrl: string;
+  isUpcoming: boolean;
 };
 
-const SLIDES: Slide[] = [
-  {
-    id: 0,
-    image: "https://ebillet.dk/poster//the-housemaidNy-2025.large.jpg",
-    title: "The Housemaid",
-  },
-  {
-    id: 1,
-    image: "https://ebillet.dk/poster//dennyetriumfbue2025.large.jpg",
-    title: "Den nye triumfbue",
-  },
-  {
-    id: 2,
-    image: "https://ebillet.dk/poster//SvampebobFirkant-2025.large.jpg",
-    title: "Svampebob Filmen - Jagen på Firkant",
-  },
-  {
-    id: 3,
-    image: "https://ebillet.dk/poster//Anaconda-2025.large.jpg",
-    title: "Anaconda",
-  },
-  {
-    id: 4,
-    image: "https://ebillet.dk/poster//nootherchoice-2025.large.jpg",
-    title: "No Other Choice",
-  },
-  {
-    id: 5,
-    image: "https://ebillet.dk/poster//begyndelser2025.large.jpg",
-    title: "Begyndelser",
-  },
-];
-
 export default function UpcomingSlider() {
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const router = useRouter();
   const [emblaRef] = useEmblaCarousel({ 
     align: "start", 
     loop: false,
@@ -52,22 +26,48 @@ export default function UpcomingSlider() {
     duration: 25
   });
 
+  useEffect(() => {
+    loadUpcomingMovies();
+  }, []);
+
+  const loadUpcomingMovies = async () => {
+    try {
+      const moviesRef = collection(db, "movies");
+      const q = query(moviesRef, where("isUpcoming", "==", true));
+      const snapshot = await getDocs(q);
+      const moviesData = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      } as Movie));
+      setMovies(moviesData);
+    } catch (error) {
+      console.error("Error loading upcoming movies:", error);
+    }
+  };
+
+  const handleMovieClick = (movie: Movie) => {
+    router.push(`/movie/${movie.id}`);
+  };
+
   return (
     <div className="w-full px-2">
       {/* VIEWPORT */}
       <div className="overflow-hidden" ref={emblaRef}>
         {/* TRACK / CONTAINER */}
         <div className="flex gap-4">
-          {SLIDES.map((slide) => (
-            <div key={slide.id} className="flex-none">
+          {movies.map((movie) => (
+            <div key={movie.id} className="flex-none">
               {/* MOVIE POSTER CARD */}
-              <div className="h-[150px] w-[104px] rounded-lg overflow-hidden shadow-lg">
+              <button
+                onClick={() => handleMovieClick(movie)}
+                className="h-[150px] w-[104px] rounded-lg overflow-hidden shadow-lg hover:scale-105 transition-transform cursor-pointer"
+              >
                 <img 
-                  src={slide.image} 
-                  alt={slide.title} 
+                  src={movie.posterUrl} 
+                  alt={movie.title} 
                   className="w-full h-full object-cover"
                 />
-              </div>
+              </button>
             </div>
           ))}
         </div>
