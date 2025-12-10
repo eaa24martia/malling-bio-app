@@ -40,6 +40,7 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
   const [selectedShowtime, setSelectedShowtime] = useState<Showtime | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSeatModalOpen, setIsSeatModalOpen] = useState(false);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
 
   // Selected seats state
@@ -189,11 +190,6 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
     );
   }
 
-  /* ----- Seat grid helper data ----- */
-  // For simplicity: we'll define rows as arrays with seat counts and some example "special" seats.
-  // You can replace these with real availability data later.
-  const seatRows: number[] = [12, 12, 0, 12, 12, 12, 12, 4]; // row 3 is empty (screen spacing)
-
   return (
     <>
       <div
@@ -324,26 +320,72 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
 <section className="space-y-1 px-4 mb-3 flex-1 overflow-y-auto mt-4">
   {selectedShowtime && (() => {
     const seatMap = convertToSeatMap(selectedShowtime);
+    const isSal1 = selectedShowtime.auditorium === "Sal 1";
 
     return seatMap.map((rowSeats, rowIndex) => {
       const rowNumber = rowIndex + 1;
 
-      // --- Row 3 spacer: empty row for screen spacing --- 
-      if (rowIndex === 2) {
-        return <div key={rowIndex} className="h-8" />; // spacer instead of row 3
-      }
+      // === SAL 1 LAYOUT ===
+      if (isSal1) {
+        // --- Row 3 spacer: empty row for screen spacing --- 
+        if (rowIndex === 2) {
+          return <div key={rowIndex} className="h-8" />; // spacer instead of row 3
+        }
 
-      // --- Row 8 (index 7): only 4 handicap seats on the right ---
-      if (rowIndex === 7) {
-        const last4 = rowSeats.slice(-4); // last 4 seats
+        // --- Row 8 (index 7): only 4 handicap seats on the right ---
+        if (rowIndex === 7) {
+          const last4 = rowSeats.slice(-4); // last 4 seats
+          return (
+            <div key={rowIndex} className="flex items-center justify-center gap-1 mt-6">
+              {/* Empty space for first 8 seats to align with other rows */}
+              {Array(8).fill(null).map((_, i) => (
+                <div key={`empty-${i}`} className="w-5 h-5" />
+              ))}
+              {/* Last 4 handicap seats */}
+              {last4.map((seatData, seatIndex) => {
+                const { row, seat, status } = seatData;
+                const selected = isSeatSelected(row, seat);
+                const isTaken = status === "taken";
+                const isHandicap = status === "handicap";
+
+                let imgSrc = "/assets/seat-red.svg";
+                if (isTaken) imgSrc = "/assets/seat-indigo.svg";
+                else if (selected) imgSrc = "/assets/seat-white.svg";
+                else if (isHandicap) imgSrc = "/assets/seat-handicap.svg";
+
+                const onClick = () => {
+                  if (isTaken) return;
+                  toggleSeatSelection(row, seat);
+                };
+
+                return (
+                  <div key={seatIndex} className="flex items-center justify-center">
+                    <button
+                      type="button"
+                      onClick={onClick}
+                      aria-pressed={selected}
+                      aria-label={`Række ${row} sæde ${seat}`}
+                      className="w-5 h-5 flex items-center justify-center rounded-md transition"
+                    >
+                      <img src={imgSrc} alt="seat" className="w-4 h-4" />
+                      {isHandicap && selected && (
+                        <span className="absolute flex items-center justify-center pointer-events-none">
+                          <img src="/assets/seat-handicap.svg" alt="handicap" className="w-3 h-3" />
+                        </span>
+                      )}
+                    </button>
+                  </div>
+                );
+              })}
+              <span className="text-white text-[10px] ml-1">{rowNumber}</span>
+            </div>
+          );
+        }
+
+        // --- Default rendering for rows 1, 2, 4, 5, 6, 7 (all 12 seats) ---
         return (
-          <div key={rowIndex} className="flex items-center justify-center gap-1 mt-6">
-            {/* Empty space for first 8 seats to align with other rows */}
-            {Array(8).fill(null).map((_, i) => (
-              <div key={`empty-${i}`} className="w-5 h-5" />
-            ))}
-            {/* Last 4 handicap seats */}
-            {last4.map((seatData, seatIndex) => {
+          <div key={rowIndex} className="flex items-center justify-center gap-1">
+            {rowSeats.map((seatData, seatIndex) => {
               const { row, seat, status } = seatData;
               const selected = isSeatSelected(row, seat);
               const isTaken = status === "taken";
@@ -383,10 +425,106 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
         );
       }
 
-      // --- Default rendering for rows 1, 2, 4, 5, 6, 7 (all 12 seats) ---
+      if (rowIndex >= 6) {
+        return null;
+      }
+
+      if (rowIndex === 5) {
+        return (
+          <div key={`spacer-${rowIndex}`}>
+            <div className="h-6" />
+            <div className="flex items-center justify-center gap-1">
+              {rowSeats.slice(0, 6).map((seatData, seatIndex) => {
+                const { row, seat, status } = seatData;
+                const selected = isSeatSelected(row, seat);
+                const isTaken = status === "taken";
+                const isHandicap = status === "handicap";
+
+                let imgSrc = "/assets/seat-red.svg";
+                if (isTaken) imgSrc = "/assets/seat-indigo.svg";
+                else if (selected) imgSrc = "/assets/seat-white.svg";
+                else if (isHandicap) imgSrc = "/assets/seat-handicap.svg";
+
+                const onClick = () => {
+                  if (isTaken) return;
+                  toggleSeatSelection(row, seat);
+                };
+
+                return (
+                  <div key={seatIndex} className="flex items-center justify-center">
+                    <button
+                      type="button"
+                      onClick={onClick}
+                      aria-pressed={selected}
+                      aria-label={`Række ${row} sæde ${seat}`}
+                      className="w-5 h-5 flex items-center justify-center rounded-md transition"
+                    >
+                      <img src={imgSrc} alt="seat" className="w-4 h-4" />
+                      {isHandicap && selected && (
+                        <span className="absolute flex items-center justify-center pointer-events-none">
+                          <img src="/assets/seat-handicap.svg" alt="handicap" className="w-3 h-3" />
+                        </span>
+                      )}
+                    </button>
+                  </div>
+                );
+              })}
+              <span className="text-white text-[10px] ml-1">{rowNumber}</span>
+            </div>
+          </div>
+        );
+      }
+
+      // --- Rows 1-3: show only first 5 seats + empty space to align with 6-seat rows ---
+      if (rowIndex <= 2) {
+        return (
+          <div key={rowIndex} className="flex items-center justify-center gap-1">
+            {rowSeats.slice(0, 5).map((seatData, seatIndex) => {
+              const { row, seat, status } = seatData;
+              const selected = isSeatSelected(row, seat);
+              const isTaken = status === "taken";
+              const isHandicap = status === "handicap";
+
+              let imgSrc = "/assets/seat-red.svg";
+              if (isTaken) imgSrc = "/assets/seat-indigo.svg";
+              else if (selected) imgSrc = "/assets/seat-white.svg";
+              else if (isHandicap) imgSrc = "/assets/seat-handicap.svg";
+
+              const onClick = () => {
+                if (isTaken) return;
+                toggleSeatSelection(row, seat);
+              };
+
+              return (
+                <div key={seatIndex} className="flex items-center justify-center">
+                  <button
+                    type="button"
+                    onClick={onClick}
+                    aria-pressed={selected}
+                    aria-label={`Række ${row} sæde ${seat}`}
+                    className="w-5 h-5 flex items-center justify-center rounded-md transition"
+                  >
+                    <img src={imgSrc} alt="seat" className="w-4 h-4" />
+                    {isHandicap && selected && (
+                      <span className="absolute flex items-center justify-center pointer-events-none">
+                        <img src="/assets/seat-handicap.svg" alt="handicap" className="w-3 h-3" />
+                      </span>
+                    )}
+                  </button>
+                </div>
+              );
+            })}
+            {/* Empty placeholder to align with 6-seat rows */}
+            <div className="w-5 h-5" />
+            <span className="text-white text-[10px] ml-1">{rowNumber}</span>
+          </div>
+        );
+      }
+
+      // --- Rows 4-5: show first 6 seats ---
       return (
         <div key={rowIndex} className="flex items-center justify-center gap-1">
-          {rowSeats.map((seatData, seatIndex) => {
+          {rowSeats.slice(0, 6).map((seatData, seatIndex) => {
             const { row, seat, status } = seatData;
             const selected = isSeatSelected(row, seat);
             const isTaken = status === "taken";
@@ -473,13 +611,22 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
                     return;
                   }
                   setIsSeatModalOpen(false);
-                  window.location.href = "/payment";
+                  setIsPaymentModalOpen(true);
                 }}
               >
                 Betaling
               </CreateButton>
             </div>
           </section>
+        </div>
+      </Modal>
+
+      {/* Payment Modal */}
+      <Modal isOpen={isPaymentModalOpen} onClose={() => setIsPaymentModalOpen(false)} title="Betaling" size="md">
+        <div className="relative min-h-full bg-[#410c1082] px-4 md:px-6 pb-4">
+          
+         
+         
         </div>
       </Modal>
     </>

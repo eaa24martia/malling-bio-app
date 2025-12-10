@@ -30,7 +30,7 @@ export default function DetailHeader({ movie }: DetailHeaderProps) {
          <div className="absolute inset-0 bg-linear-to-b from-[#00000024] to-[#000000] pointer-events-none"></div>
 
          {movie.trailerUrl && (
-           <div className="absolute top-30 left-[-9%] z-10 scale-75">
+           <div className="absolute top-30 left-[-9%] z-7 scale-75">
              <a
                href={movie.trailerUrl}
                target="_blank"
