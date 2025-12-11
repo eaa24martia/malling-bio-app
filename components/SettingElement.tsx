@@ -45,13 +45,13 @@ export default function SettingElement() {
       }}
     >
       <div className="pt-5">
-        {/* Mine billetter button */}
         <button 
-          className="w-full transition-colors p-4 flex items-center justify-between group"
-        >
-          <h3 className="text-white text-[20px] font-bold">Mine billetter</h3>
-          <img src="assets/white-arrow-right.svg" alt="" className="w-10 h-10" />
-        </button>
+        onClick={() => router.push("/tickets")}
+        className="w-full transition-colors p-4 flex items-center justify-between group"
+      >
+        <h3 className="text-white text-[20px] font-bold">Mine billetter</h3>
+        <img src="assets/white-arrow-right.svg" alt="" className="w-10 h-10" />
+      </button>
 
         {/* Divider */}
         <div className="h-px bg-white my-6 mb-4"></div>

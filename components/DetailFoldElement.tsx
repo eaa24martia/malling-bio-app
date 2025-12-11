@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { collection, query, where, getDocs } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { collection, query, where, getDocs, addDoc, serverTimestamp } from "firebase/firestore";
+import { db, auth } from "@/lib/firebase";
 import CreateButton from "./CreateButton";
 import Modal from "./Modal";
 import PaymentContainer from "./PaymentContainer";
@@ -170,6 +170,48 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
 
   const isSeatSelected = (row: number, seat: number) =>
     selectedSeatsList.some((s) => s.row === row && s.seat === seat);
+
+  const handlePaymentSuccess = async () => {
+    try {
+      const user = auth.currentUser;
+      if (!user || !selectedShowtime) {
+        console.error("No user or showtime selected");
+        return;
+      }
+
+      // Create ticket data
+      const ticketData = {
+        userId: user.uid,
+        userEmail: user.email,
+        movieId: movieId,
+        movieTitle: movieTitle,
+        moviePosterUrl: moviePosterUrl,
+        showtimeId: selectedShowtime.id,
+        datetime: selectedShowtime.datetime,
+        auditorium: selectedShowtime.auditorium,
+        language: selectedShowtime.language,
+        pricePerSeat: selectedShowtime.price,
+        seats: selectedSeatsList,
+        totalPrice: selectedSeatsList.length * selectedShowtime.price,
+        totalSeats: selectedSeatsList.length,
+        purchaseDate: serverTimestamp(),
+        status: "active", // active, used, cancelled
+      };
+
+      // Save ticket to Firestore
+      const ticketsRef = collection(db, "tickets");
+      await addDoc(ticketsRef, ticketData);
+
+      console.log("Ticket saved successfully!");
+
+      // Close payment modal and show confirmation
+      setIsPaymentModalOpen(false);
+      setIsTicketConfirmationOpen(true);
+    } catch (error) {
+      console.error("Error saving ticket:", error);
+      alert("Der opstod en fejl ved gem af billetten. Prøv venligst igen.");
+    }
+  };
 
   function SeatCard({ row, seat, onRemove }: { row: number; seat: number; onRemove?: () => void }) {
     return (
@@ -627,10 +669,7 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
       <Modal isOpen={isPaymentModalOpen} onClose={() => setIsPaymentModalOpen(false)} title="Betaling" size="md">
         <div className="relative min-h-full bg-[#410c1082] px-4 md:px-6 pb-4">
           <PaymentContainer 
-            onPaymentSuccess={() => {
-              setIsPaymentModalOpen(false);
-              setIsTicketConfirmationOpen(true);
-            }}
+            onPaymentSuccess={handlePaymentSuccess}
           />
         </div>
       </Modal>
