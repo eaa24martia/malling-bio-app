@@ -5,11 +5,12 @@ import { useRouter } from "next/navigation";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { signOutUser } from "@/lib/auth";
+import { useTheme } from "@/contexts/ThemeContext";
 import CreateButton from "./CreateButton";
 import Modal from "./Modal";
 
 export default function SettingElement() {
-  const [isHighContrast, setIsHighContrast] = useState(false);
+  const { isHighContrast, toggleHighContrast } = useTheme();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userEmail, setUserEmail] = useState<string>("");
   const router = useRouter();
@@ -60,7 +61,7 @@ export default function SettingElement() {
         <div className="w-full p-4 flex items-center justify-between">
           <h3 className="text-white text-[20px] font-bold">Høj kontrast-tilstand</h3>
           <button
-            onClick={() => setIsHighContrast(!isHighContrast)}
+            onClick={toggleHighContrast}
             className={`relative w-20 h-10 rounded-full transition-colors ${
               isHighContrast ? 'bg-[#B2182B]' : 'bg-gray-400'
             }`}

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 
 // Import Dosis and Palanquin fonts
 import { Dosis, Palanquin } from "next/font/google";
@@ -33,7 +34,9 @@ export default function RootLayout({
   return (
     <html lang="da">
       <body className={`${dosis.variable} ${palanquin.variable} ${palanquin.className} antialiased`}>
-        {children}
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
