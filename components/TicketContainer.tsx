@@ -1,5 +1,7 @@
 "use client";
 
+import { useTheme } from "@/contexts/ThemeContext";
+
 type Seat = { row: number; seat: number };
 
 interface Ticket {
@@ -26,6 +28,8 @@ interface TicketCardProps {
 }
 
 export default function TicketCard({ ticket }: TicketCardProps) {
+  const { isHighContrast } = useTheme();
+
   const formatDate = (date: Date) => {
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -66,11 +70,12 @@ export default function TicketCard({ ticket }: TicketCardProps) {
            backgroundPosition: 'center',
            backgroundRepeat: 'no-repeat'
          }}>
-      
       <div 
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'linear-gradient(to bottom, #b2182a9b, #0000008e)'
+          background: isHighContrast
+            ? 'linear-gradient(to bottom, #000000cc, #000000ee)'
+            : 'linear-gradient(to bottom, #b2182a9b, #0000008e)'
         }}
       />
       
