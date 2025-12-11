@@ -1,6 +1,7 @@
 // app/page.tsx
 "use client";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { useTheme } from "@/contexts/ThemeContext";
 import SplashScreen from "@/components/SplashScreen";
 import RedLogo from "@/components/RedLogo";
 import Carousel from "@/components/EmblaCarousel";
@@ -8,6 +9,7 @@ import CreateButton from "@/components/CreateButton";
 import LoginButton from "@/components/LoginButton";
 
 export default function HomePage() {
+  const { isHighContrast } = useTheme();
   const [showSplash, setShowSplash] = useState(true);
   const [mounted, setMounted] = useState(false);
 
@@ -28,12 +30,15 @@ export default function HomePage() {
     return (
       <main 
         className="h-screen relative overflow-hidden"
-        style={{
-          backgroundImage: `url('assets/background-1.svg')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat'
-        }}
+        style={isHighContrast
+          ? { background: "#000" }
+          : {
+              backgroundImage: `url('assets/background-1.svg')`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat"
+            }
+        }
       >
         <section className="relative z-10">
           <div className="flex justify-center">
@@ -61,12 +66,15 @@ export default function HomePage() {
       <>
         <main 
           className="h-screen relative overflow-hidden"
-          style={{
-            backgroundImage: `url('assets/background-1.svg')`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat'
-          }}
+          style={isHighContrast
+            ? { background: "#000" }
+            : {
+                backgroundImage: `url('assets/background-1.svg')`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat"
+              }
+          }
         >
           <section className="relative z-10">
             <div className="flex justify-center">
@@ -94,12 +102,15 @@ export default function HomePage() {
   return (
     <main 
       className="h-screen relative overflow-hidden"
-      style={{
-        backgroundImage: `url('assets/background-1.svg')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }}
+      style={isHighContrast
+        ? { background: "#000" }
+        : {
+            backgroundImage: `url('assets/background-1.svg')`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat"
+          }
+      }
     >
       <section className="relative z-10">
         <div className="flex justify-center">
