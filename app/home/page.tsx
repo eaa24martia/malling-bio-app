@@ -22,7 +22,6 @@ export default function HomePage() {
         setUserName(user.displayName || "Bruger");
         setLoading(false);
       } else {
-        // User is not signed in, redirect to login
         router.push("/login");
       }
     });

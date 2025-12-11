@@ -1,31 +1,33 @@
 /* === TAILWIND CORE === */
 @import "tailwindcss";
 
-/* === GLOBAL VARIABLES (YOUR BRAND COLORS) === */
-:root {
-  --color-bg: #FFF3E7; /* Linen */
-  --color-primary: #b2182b; /* Brown Red */
-  --color-accent: #f9d78a; /* Jasmine */
-  --color-soft: #ffb8a8; /* Powder Blush */
-  --color-dark: #241a16; /* Coffee Bean */
-  
-  /* High Contrast Theme Variables */
-  --bg: #ffffff;
-  --surface: #ffffff;
-  --text: #1D2B4F;
+:root{
+  /* Brand / design palette */
+  --color-bg: #FFF3E6;       /* Linen (baggrund) */
+  --color-primary: #B2182B;  /* Brown Red (primær) */
+  --color-accent: #F9D78A;   /* Jasmine (accent) */
+  --color-soft: #FFB8A8;     /* Powder Blush (soft) */
+  --color-dark: #241A16;     /* Coffee Bean (tekst på lys bg) */
+  --color-indigo: #1D2B4F;   /* Space Indigo (mørk blue tekst) */
+
+  /* Semantiske tokens (brug disse i dine komponenter) */
+  --bg: var(--color-bg);
+  --surface: #FFFFFF;
+  --text: var(--color-indigo);
   --muted: #6b6b6b;
-  --accent: #B2182B;      /* din primære røde */
-  --accent-contrast: #ffffff;
+  --accent: var(--color-primary);
+  --accent-contrast: #FFFFFF;
   --focus: #FFD24D;
   --border: #e5e7eb;
 }
 
+/* High-contrast theme overrides */
 html.high-contrast {
   --bg: #000000;
   --surface: #000000;
   --text: #ffffff;
   --muted: #ffffff;
-  --accent: #FFD24D;
+  --accent: #FFD24D;         /* tydelig gul accent i HC */
   --accent-contrast: #000000;
   --focus: #FFD24D;
   --border: #ffffff;
@@ -36,8 +38,8 @@ html, body {
   padding: 0;
   margin: 0;
   height: 100%;
-  background: var(--color-bg);
-  color: var(--color-dark);
+  background: var(--bg);
+  color: var(--text);
   font-family: var(--font-palanquin, 'Palanquin', sans-serif);
   font-weight: 400;
   -webkit-font-smoothing: antialiased;

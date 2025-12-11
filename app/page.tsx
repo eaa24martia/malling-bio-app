@@ -12,22 +12,18 @@ export default function HomePage() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // Mark component as mounted
     setMounted(true);
     
-    // Disable scrolling on this page
     document.body.style.overflow = 'hidden';
     
     const timer = setTimeout(() => setShowSplash(false), 4000);
     
-    // Re-enable scrolling when component unmounts
     return () => {
       clearTimeout(timer);
       document.body.style.overflow = 'auto';
     };
   }, []);
 
-  // Don't render anything until mounted to avoid hydration mismatch
   if (!mounted) {
     return (
       <main 
