@@ -8,12 +8,14 @@ import BottomNav from "@/components/BottomNav";
 import RedHeader from "@/components/Header";
 import ProfilePicture from "@/components/ProfilePicture";
 import SettingElement from "@/components/SettingElement";
+import { useTheme } from "@/contexts/ThemeContext";
 
 export default function ProfilePage() {
   const [userName, setUserName] = useState<string>("");
   const [userEmail, setUserEmail] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const { isHighContrast } = useTheme();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -34,13 +36,20 @@ export default function ProfilePage() {
   if (loading) {
     return (
       <main className="min-h-screen relative flex items-center justify-center"
-        style={{
-          backgroundImage: `url('assets/background-1.svg')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          color: 'var(--text)'
-        }}>
+        style={
+          isHighContrast
+            ? {
+                backgroundColor: "#000",
+                color: "var(--text)"
+              }
+            : {
+                backgroundImage: `url('assets/background-1.svg')`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                color: 'var(--text)'
+              }
+        }>
         <div className="text-xl" style={{ color: 'var(--text)' }}>Indlæser...</div>
       </main>
     );
@@ -48,13 +57,20 @@ export default function ProfilePage() {
 
   return (
     <main className="min-h-screen relative"
-        style={{
-          backgroundImage: `url('assets/background-1.svg')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          color: 'var(--text)'
-        }}>
+        style={
+          isHighContrast
+            ? {
+                backgroundColor: "#000",
+                color: "var(--text)"
+              }
+            : {
+                backgroundImage: `url('assets/background-1.svg')`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                color: 'var(--text)'
+              }
+        }>
 
         <section className="relative z-10">
                   <RedHeader />

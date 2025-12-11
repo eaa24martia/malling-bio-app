@@ -34,15 +34,22 @@ export default function SettingElement() {
     }
   };
 
+  const mainBgImage = isHighContrast
+    ? 'linear-gradient(to top, #000000, #000000)'
+    : 'linear-gradient(to top, #400B10, #B2182B), url(/assets/backgrounds-3.svg)';
+  const mainBgColor = isHighContrast ? '#000000' : undefined;
+
   return (
     <div 
       className="w-full min-h-[560px] mt-20 rounded-t-[30px] relative overflow-hidden"
       style={{
-        background: 'linear-gradient(to top, #400B10, #B2182B), url(/assets/backgrounds-3.svg)',
+        backgroundImage: mainBgImage,
+        backgroundColor: mainBgColor,
         backgroundSize: 'cover, cover',
         backgroundPosition: 'center, center',
         backgroundRepeat: 'no-repeat, no-repeat',
-        backgroundBlendMode: 'multiply'
+        backgroundBlendMode: 'multiply',
+        color: 'var(--text)'
       }}
     >
       <div className="pt-5">
@@ -50,46 +57,47 @@ export default function SettingElement() {
         onClick={() => router.push("/tickets")}
         className="w-full transition-colors p-4 flex items-center justify-between group"
       >
-        <h3 className="text-white text-[20px] font-bold">Mine billetter</h3>
+        <h3 className="text-[20px] font-bold text-white">Mine billetter</h3>
         <img src="assets/white-arrow-right.svg" alt="" className="w-10 h-10" />
       </button>
 
         {/* Divider */}
-        <div className="h-px bg-white my-6 mb-4"></div>
+        <div className="w-full h-0.5 my-6 mb-4 bg-[--border]! opacity-100" style={{ backgroundColor: 'var(--border)' }}></div>
 
         {/* Høj kontrast-tilstand toggle */}
         <div className="w-full p-4 flex items-center justify-between">
-          <h3 className="text-white text-[20px] font-bold">Høj kontrast-tilstand</h3>
+          <h3 className="text-[20px] font-bold text-white">Høj kontrast-tilstand</h3>
           <button
             onClick={toggleHighContrast}
             className={`relative w-20 h-10 rounded-full transition-colors ${
-              isHighContrast ? 'bg-[#B2182B]' : 'bg-gray-400'
+              isHighContrast ? 'border border-[--border] bg-white' : 'border border-transparent bg-gray-400'
             }`}
             aria-label="Toggle high contrast mode"
           >
             <span
-              className={`absolute top-1 left-1 w-8 h-8 bg-gray-200 rounded-full shadow-md transition-transform ${
-                isHighContrast ? 'translate-x-10' : 'translate-x-0'
+              className={`absolute top-1 left-1 w-8 h-8 rounded-full shadow-md transition-transform ${
+                isHighContrast
+                  ? 'translate-x-10 bg-yellow-400 border border-[--border]'
+                  : 'translate-x-0 bg-gray-200 border border-transparent'
               }`}
             />
           </button>
         </div>
 
         {/* Divider */}
-        <div className="h-px bg-white my-6 mb-4"></div>
+        <div className="w-full h-0.5 my-6 mb-4 bg-[--border]! opacity-100" style={{ backgroundColor: 'var(--border)' }}></div>
 
         {/* Om Malling Bio button */}
         <button 
           onClick={() => setIsModalOpen(true)}
           className="w-full p-4 flex items-center justify-between group"
         >
-          <h3 className="text-white text-[20px] font-bold">Om Malling Bio</h3>
+          <h3 className="text-[20px] font-bold text-white">Om Malling Bio</h3>
           <img src="assets/white-arrow-right.svg" alt="" className="w-10 h-10" />
         </button>
       </div>
 
-
-        <div className="h-px bg-white my-6 mb-4"></div>
+        <div className="w-full h-0.5 my-6 mb-4 bg-[--border]! opacity-100" style={{ backgroundColor: 'var(--border)' }}></div>
       <div className="flex justify-center mt-8 pb-8">
         <CreateButton onClick={handleLogout}>Log ud</CreateButton>
       </div>
@@ -101,7 +109,7 @@ export default function SettingElement() {
   title="Om Malling Bio"
   size="md"
 >
-  <div className="relative min-h-full bg-[#410C10]">
+  <div className="relative min-h-full" style={{ background: 'var(--surface)' }}>
     {/* IMAGE HERO */}
     <section className="relative w-full h-64 md:h-72">
       <img
@@ -114,13 +122,13 @@ export default function SettingElement() {
       <div 
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'linear-gradient(to bottom, transparent, #410C10)'
+          background: 'linear-gradient(to bottom, transparent, var(--surface))'
         }}
       />
     </section>
 
     {/* TEXT CONTENT */}
-    <div className="px-6 py-10 pb-50 text-center text-white space-y-8 max-w-prose mx-auto">
+    <div className="px-6 py-10 pb-50 text-center text-[--text] space-y-8 max-w-prose mx-auto">
       <p>
         Malling Bio er en lille, lokal biograf med stor betydning for byen. I generationer har den været
         et naturligt samlingspunkt for familier, venner og filmelskere i Malling og oplandet. Her kommer
