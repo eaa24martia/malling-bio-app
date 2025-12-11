@@ -12,6 +12,7 @@ type Props = {
   children?: React.ReactNode;
   size?: Size;
   roundedTopOnly?: boolean; // sheet-style on mobile
+  onBack?: () => void; // Optional back button handler
 };
 
 const sizeClass: Record<Size, string> = {
@@ -29,6 +30,7 @@ export default function Modal({
   children,
   size = "md",
   roundedTopOnly = false,
+  onBack,
 }: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const previouslyFocused = useRef<HTMLElement | null>(null);
@@ -130,13 +132,13 @@ export default function Modal({
    <div className="flex items-center justify-center h-[55px] bg-[#B2182B] px-4 md:px-5">
 
      <button
-  onClick={onClose}
-  aria-label="Luk"
+  onClick={onBack || onClose}
+  aria-label={onBack ? "Gå tilbage" : "Luk"}
   className="absolute left-4 p-2"
 >
   <img 
-    src="/assets/white-close.svg" 
-    alt="Luk" 
+    src={onBack ? "/assets/white-arrow-left.svg" : "/assets/white-close.svg"}
+    alt={onBack ? "Tilbage" : "Luk"}
     className="w-5 h-5"
   />
 </button>

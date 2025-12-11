@@ -72,7 +72,7 @@ export default function SignupPage() {
         <div className="relative flex justify-center p-6">
           <Link href="/" className="absolute left-6 flex items-center hover:opacity-80 transition-opacity">
             <Image
-              src="assets/arrow-left.svg"
+              src="assets/white-arrow-left.svg"
               alt="Tilbage"
               width={26}
               height={26}

@@ -403,7 +403,16 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
       </Modal>
 
       {/* Seat Selection Modal */}
-      <Modal isOpen={isSeatModalOpen} onClose={() => setIsSeatModalOpen(false)} title="Sædevælger" size="md">
+      <Modal 
+        isOpen={isSeatModalOpen} 
+        onClose={() => setIsSeatModalOpen(false)} 
+        title="Sædevælger" 
+        size="md"
+        onBack={() => {
+          setIsSeatModalOpen(false);
+          setIsModalOpen(true);
+        }}
+      >
         <div className="relative bg-[#0e0607c0] px-0 pb-0 flex flex-col" style={{ height: 'calc(92vh - 55px)' }}>
           {/* Category legend — non-interactive */}
           <section className="pt-2 pb-0 px-4 bg-[#670612]">
@@ -747,7 +756,16 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
       </Modal>
 
       {/* Payment Modal */}
-      <Modal isOpen={isPaymentModalOpen} onClose={() => setIsPaymentModalOpen(false)} title="Betaling" size="md">
+      <Modal 
+        isOpen={isPaymentModalOpen} 
+        onClose={() => setIsPaymentModalOpen(false)} 
+        title="Betaling" 
+        size="md"
+        onBack={() => {
+          setIsPaymentModalOpen(false);
+          setIsSeatModalOpen(true);
+        }}
+      >
         <div className="relative min-h-full bg-[#410c1082] px-4 md:px-6 pb-4">
           <PaymentContainer 
             onPaymentSuccess={handlePaymentSuccess}
