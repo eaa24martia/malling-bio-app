@@ -9,6 +9,7 @@ import BottomNav from "@/components/BottomNav";
 import DetailHeader from "@/components/DetailHeader";
 import DetailDescription from "@/components/DetailDescription";
 import DetailFoldElement from "@/components/DetailFoldElement";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface Movie {
   id: string;
@@ -33,6 +34,7 @@ export default function MovieDetailPage() {
   const params = useParams();
   const [movie, setMovie] = useState<Movie | null>(null);
   const [loading, setLoading] = useState(true);
+  const { isHighContrast } = useTheme();
 
   useEffect(() => {
     loadMovie();
@@ -58,7 +60,8 @@ export default function MovieDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center"
+        style={{ background: isHighContrast ? '#000' : '#000' }}>
         <p className="text-white">Loading...</p>
       </div>
     );
@@ -66,7 +69,8 @@ export default function MovieDetailPage() {
 
   if (!movie) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center"
+        style={{ background: isHighContrast ? '#000' : '#000' }}>
         <p className="text-white">Movie not found</p>
       </div>
     );
@@ -77,12 +81,16 @@ export default function MovieDetailPage() {
       {/* Fixed background layer */}
       <div 
         className="fixed inset-0 z-0"
-        style={{
-          background: '#000000',
-          backgroundSize: 'cover, cover',
-          backgroundPosition: 'center, center',
-          backgroundRepeat: 'no-repeat, no-repeat'
-        }}
+        style={
+          isHighContrast
+            ? { background: '#000' }
+            : {
+                background: '#000000',
+                backgroundSize: 'cover, cover',
+                backgroundPosition: 'center, center',
+                backgroundRepeat: 'no-repeat, no-repeat'
+              }
+        }
       />
       
       {/* Content layer */}

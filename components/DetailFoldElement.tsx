@@ -6,6 +6,7 @@ import { db, auth } from "@/lib/firebase";
 import CreateButton from "./CreateButton";
 import Modal from "./Modal";
 import PaymentContainer from "./PaymentContainer";
+import { useTheme } from "@/contexts/ThemeContext";
 
 type Seat = { row: number; seat: number };
 
@@ -37,6 +38,7 @@ interface DetailFoldElementProps {
 }
 
 export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl }: DetailFoldElementProps) {
+  const { isHighContrast } = useTheme();
   const [showtimes, setShowtimes] = useState<Showtime[]>([]);
   const [selectedShowtime, setSelectedShowtime] = useState<Showtime | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -319,13 +321,23 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
     <>
       <div
         className="w-full min-h-[360px] pb-20 rounded-[30px] relative overflow-hidden"
-        style={{
-          background: 'linear-gradient(to top, #400B10, #B2182B), url(/assets/backgrounds-3.svg)',
-          backgroundSize: 'cover, cover',
-          backgroundPosition: 'center, center',
-          backgroundRepeat: 'no-repeat, no-repeat',
-          backgroundBlendMode: 'multiply',
-        }}
+        style={
+          isHighContrast
+            ? {
+                background: 'linear-gradient(to top, #000000, #000000)',
+                backgroundSize: 'cover, cover',
+                backgroundPosition: 'center, center',
+                backgroundRepeat: 'no-repeat, no-repeat',
+                backgroundBlendMode: 'multiply',
+              }
+            : {
+                background: 'linear-gradient(to top, #400B10, #B2182B), url(/assets/backgrounds-3.svg)',
+                backgroundSize: 'cover, cover',
+                backgroundPosition: 'center, center',
+                backgroundRepeat: 'no-repeat, no-repeat',
+                backgroundBlendMode: 'multiply',
+              }
+        }
       >
         <section className="absolute inset-0 flex items-center justify-center mt-[-70]">
           <div className="relative">
@@ -345,7 +357,7 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
 
       {/* Times Modal */}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Se tider" size="md">
-        <div className="relative min-h-full bg-[#410c1082] px-4 md:px-6 pb-4">
+        <div className="relative min-h-full px-4 md:px-6 pb-4" style={{ background: isHighContrast ? '#000' : '#410c1082' }}>
           {/* Date Selector */}
           <section className="pt-6 pb-4">
             <h3 className="text-white text-sm font-semibold mb-3">Datoer</h3>
@@ -413,7 +425,7 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
           setIsModalOpen(true);
         }}
       >
-        <div className="relative bg-[#0e0607c0] px-0 pb-0 flex flex-col" style={{ height: 'calc(92vh - 55px)' }}>
+        <div className="relative px-0 pb-0 flex flex-col" style={{ height: 'calc(92vh - 55px)', background: isHighContrast ? '#000' : '#0e0607c0' }}>
           {/* Category legend — non-interactive */}
           <section className="pt-2 pb-0 px-4 bg-[#670612]">
   <div className="flex items-center justify-between pb-2">
@@ -766,7 +778,7 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
           setIsSeatModalOpen(true);
         }}
       >
-        <div className="relative min-h-full bg-[#410c1082] px-4 md:px-6 pb-4">
+        <div className="relative min-h-full px-4 md:px-6 pb-4" style={{ background: isHighContrast ? '#000' : '#410c1082' }}>
           <PaymentContainer 
             onPaymentSuccess={handlePaymentSuccess}
           />
@@ -775,7 +787,7 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
 
       {/* Ticket Confirmation Modal */}
       <Modal isOpen={isTicketConfirmationOpen} onClose={() => setIsTicketConfirmationOpen(false)} title="Din billet" size="md">
-        <div className="relative min-h-full bg-[#410c1082] px-4 md:px-6 pb-4">
+        <div className="relative min-h-full px-4 md:px-6 pb-4" style={{ background: isHighContrast ? '#000' : '#410c1082' }}>
           <div className="text-center py-8">
             <div className="mb-6">
               <div className="text-white text-xl font-bold mb-2">{movieTitle}</div>
