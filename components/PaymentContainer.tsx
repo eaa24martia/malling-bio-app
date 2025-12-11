@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTheme } from "@/contexts/ThemeContext";
 import Input from "./Input";
 import CreateButton from "./CreateButton";
 
@@ -9,6 +10,7 @@ interface PaymentContainerProps {
 }
 
 export default function PaymentContainer({ onPaymentSuccess }: PaymentContainerProps) {
+  const { isHighContrast } = useTheme();
   const [cardNumber, setCardNumber] = useState("");
   const [expiryDate, setExpiryDate] = useState("");
   const [cvv, setCvv] = useState("");
@@ -25,10 +27,10 @@ export default function PaymentContainer({ onPaymentSuccess }: PaymentContainerP
 
   return (
     <section className="w-full min-h-screen flex items-center justify-center">
-      <div className="bg-[#FEEFE0] rounded-xl shadow-lg h-[445px] w-[365px] flex flex-col items-center -translate-y-20 pt-6 px-6">
+      <div className={isHighContrast ? "bg-black rounded-xl shadow-lg h-[445px] w-[365px] flex flex-col items-center -translate-y-20 pt-6 px-6" : "bg-[#FEEFE0] rounded-xl shadow-lg h-[445px] w-[365px] flex flex-col items-center -translate-y-20 pt-6 px-6"}>
         
         {/* Title */}
-        <h2 className="text-[#192B53] text-[24px] font-bold mb-4">Kreditkort</h2>
+        <h2 className={`text-[24px] font-bold mb-4 ${isHighContrast ? 'text-white' : 'text-[#192B53]'}`}>Kreditkort</h2>
 
         {/* Form */}
         <form id="paymentForm" onSubmit={handleSubmit} className="w-full space-y-4">
