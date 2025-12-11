@@ -38,9 +38,10 @@ export default function ProfilePage() {
           backgroundImage: `url('assets/background-1.svg')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat'
+          backgroundRepeat: 'no-repeat',
+          color: 'var(--text)'
         }}>
-        <div className="text-[#192B5A] text-xl">Indlæser...</div>
+        <div className="text-xl" style={{ color: 'var(--text)' }}>Indlæser...</div>
       </main>
     );
   }
@@ -51,7 +52,8 @@ export default function ProfilePage() {
           backgroundImage: `url('assets/background-1.svg')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat'
+          backgroundRepeat: 'no-repeat',
+          color: 'var(--text)'
         }}>
 
         <section className="relative z-10">
@@ -59,7 +61,7 @@ export default function ProfilePage() {
         </section>
 
         <div className="pt-20">
-            <h1 className="font-bold text-center text-[#192B5A] mb-0 mt-5" style={{ fontSize: '30px' }}>
+            <h1 className="font-bold text-center mb-0 mt-5" style={{ fontSize: '30px', color: 'var(--text)' }}>
             Hej {userName}!
           </h1>
            <ProfilePicture />
