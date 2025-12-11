@@ -8,6 +8,27 @@
   --color-accent: #f9d78a; /* Jasmine */
   --color-soft: #ffb8a8; /* Powder Blush */
   --color-dark: #241a16; /* Coffee Bean */
+  
+  /* High Contrast Theme Variables */
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --text: #1D2B4F;
+  --muted: #6b6b6b;
+  --accent: #B2182B;      /* din primære røde */
+  --accent-contrast: #ffffff;
+  --focus: #FFD24D;
+  --border: #e5e7eb;
+}
+
+html.high-contrast {
+  --bg: #000000;
+  --surface: #000000;
+  --text: #ffffff;
+  --muted: #ffffff;
+  --accent: #FFD24D;
+  --accent-contrast: #000000;
+  --focus: #FFD24D;
+  --border: #ffffff;
 }
 
 /* === GLOBAL BASE STYLES === */
@@ -53,48 +74,4 @@ h1, h2, h3, h4, h5, h6 {
     transform: translateY(100%);
     opacity: 0;
   }
-}
-
-/* === HIGH CONTRAST MODE === */
-html.high-contrast {
-  /* Increase contrast for all text */
-  --color-dark: #000000;
-  --color-bg: #FFFFFF;
-  
-  /* Make primary colors more contrasted */
-  --color-primary: #8B0000; /* Darker red */
-  --color-accent: #FFD700; /* Brighter yellow */
-}
-
-html.high-contrast body {
-  background: var(--color-bg);
-  color: var(--color-dark);
-}
-
-/* High contrast text colors */
-html.high-contrast h1,
-html.high-contrast h2,
-html.high-contrast h3,
-html.high-contrast h4,
-html.high-contrast h5,
-html.high-contrast h6 {
-  color: #000000;
-}
-
-/* Improve readability for red backgrounds */
-html.high-contrast [style*="#B2182B"],
-html.high-contrast [style*="#b2182b"] {
-  background-color: #000000 !important;
-  color: #FFFFFF !important;
-}
-
-/* White text on dark backgrounds should be pure white */
-html.high-contrast .text-white {
-  color: #FFFFFF !important;
-}
-
-/* Dark text should be pure black */
-html.high-contrast .text-\[\#192B5A\],
-html.high-contrast [style*="color: #192B5A"] {
-  color: #000000 !important;
 }
