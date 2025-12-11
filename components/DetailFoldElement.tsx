@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { collection, query, where, getDocs, addDoc, serverTimestamp } from "firebase/firestore";
+import { collection, query, where, getDocs, addDoc, serverTimestamp, doc, updateDoc, getDoc } from "firebase/firestore";
 import { db, auth } from "@/lib/firebase";
 import CreateButton from "./CreateButton";
 import Modal from "./Modal";
@@ -132,8 +132,31 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
   const handleSelectShowtime = (showtime: Showtime) => {
     setSelectedShowtime(showtime);
     setIsModalOpen(false);
-    setIsSeatModalOpen(true);
     setSelectedSeatsList([]); // Reset selected seats
+    // Reload showtime data to get latest seat availability
+    loadCurrentSeatMap(showtime.id);
+  };
+
+  // Load current seat map with real-time seat availability
+  const loadCurrentSeatMap = async (showtimeId: string) => {
+    try {
+      const showtimeRef = doc(db, "showtimes", showtimeId);
+      const showtimeDoc = await getDoc(showtimeRef);
+      
+      if (showtimeDoc.exists()) {
+        const data = showtimeDoc.data();
+        const updatedShowtime = {
+          id: showtimeDoc.id,
+          ...data,
+          datetime: data.datetime?.toDate(),
+        } as Showtime;
+        setSelectedShowtime(updatedShowtime);
+        setIsSeatModalOpen(true);
+      }
+    } catch (error) {
+      console.error("Error loading seat map:", error);
+      setIsSeatModalOpen(true); // Open modal anyway with cached data
+    }
   };
 
   // Convert flat seat array to 2D array
@@ -202,6 +225,9 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
       const ticketsRef = collection(db, "tickets");
       await addDoc(ticketsRef, ticketData);
 
+      // Update seat map to mark seats as taken
+      await updateSeatMapWithTakenSeats(selectedShowtime.id, selectedSeatsList);
+
       console.log("Ticket saved successfully!");
 
       // Close payment modal and show confirmation
@@ -210,6 +236,61 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
     } catch (error) {
       console.error("Error saving ticket:", error);
       alert("Der opstod en fejl ved gem af billetten. Prøv venligst igen.");
+    }
+  };
+
+  // Update the showtime's seatMap to mark seats as taken
+  const updateSeatMapWithTakenSeats = async (showtimeId: string, seats: Seat[]) => {
+    try {
+      const showtimeRef = doc(db, "showtimes", showtimeId);
+      const showtimeDoc = await getDoc(showtimeRef);
+      
+      if (!showtimeDoc.exists()) {
+        console.error("Showtime not found");
+        return;
+      }
+
+      const showtimeData = showtimeDoc.data();
+      let seatMap = showtimeData.seatMap;
+
+      // Check if seatMap is 2D array or flat array
+      const is2D = Array.isArray(seatMap) && seatMap.length > 0 && Array.isArray(seatMap[0]);
+
+      if (is2D) {
+        // Handle 2D array
+        seatMap = seatMap.map((row: SeatStatus[]) => 
+          row.map((seatData: SeatStatus) => {
+            const isTaken = seats.some(s => s.row === seatData.row && s.seat === seatData.seat);
+            if (isTaken) {
+              return { ...seatData, status: "taken" as const };
+            }
+            return seatData;
+          })
+        );
+      } else {
+        // Handle flat array
+        seatMap = (seatMap as SeatStatus[]).map((seatData: SeatStatus) => {
+          const isTaken = seats.some(s => s.row === seatData.row && s.seat === seatData.seat);
+          if (isTaken) {
+            return { ...seatData, status: "taken" as const };
+          }
+          return seatData;
+        });
+      }
+
+      // Calculate new seatsAvailable count
+      const flatSeatMap = is2D ? (seatMap as SeatStatus[][]).flat() : (seatMap as SeatStatus[]);
+      const seatsAvailable = flatSeatMap.filter(s => s.status === "available").length;
+
+      // Update Firestore
+      await updateDoc(showtimeRef, {
+        seatMap: seatMap,
+        seatsAvailable: seatsAvailable
+      });
+
+      console.log("Seat map updated successfully");
+    } catch (error) {
+      console.error("Error updating seat map:", error);
     }
   };
 
