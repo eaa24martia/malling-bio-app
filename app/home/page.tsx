@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/lib/firebase";
+import { useTheme } from "@/contexts/ThemeContext";
 import RedHeader from "@/components/Header";
 import PreviewCarousel from "@/components/PreviewCarousel";
 import MovieSlider from "@/components/MovieSlider";
@@ -15,6 +16,7 @@ export default function HomePage() {
   const [userName, setUserName] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const { isHighContrast } = useTheme();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -32,11 +34,15 @@ export default function HomePage() {
   if (loading) {
     return (
       <div className="fixed inset-0 flex items-center justify-center"
-        style={{
-          background: `url('/assets/backgrounds-2.svg'), linear-gradient(135deg, #000000 0%, #4B0009 100%)`,
-          backgroundSize: 'cover, cover',
-          backgroundPosition: 'center, center'
-        }}>
+        style={
+          isHighContrast
+            ? { background: '#000' }
+            : {
+                background: `url('/assets/backgrounds-2.svg'), linear-gradient(135deg, #000000 0%, #4B0009 100%)`,
+                backgroundSize: 'cover, cover',
+                backgroundPosition: 'center, center'
+              }
+        }>
         <div className="text-white text-xl">Indlæser...</div>
       </div>
     );
@@ -47,12 +53,16 @@ export default function HomePage() {
       {/* Fixed background layer */}
       <div 
         className="fixed inset-0 z-0"
-        style={{
-          background: `url('/assets/backgrounds-2.svg'), linear-gradient(135deg, #000000 0%, #4B0009 100%)`,
-          backgroundSize: 'cover, cover',
-          backgroundPosition: 'center, center',
-          backgroundRepeat: 'no-repeat, no-repeat'
-        }}
+        style={
+          isHighContrast
+            ? { background: '#000' }
+            : {
+                background: `url('/assets/backgrounds-2.svg'), linear-gradient(135deg, #000000 0%, #4B0009 100%)`,
+                backgroundSize: 'cover, cover',
+                backgroundPosition: 'center, center',
+                backgroundRepeat: 'no-repeat, no-repeat'
+              }
+        }
       />
       
       {/* Content layer */}
