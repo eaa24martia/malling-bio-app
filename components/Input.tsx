@@ -1,3 +1,5 @@
+import { useTheme } from "@/contexts/ThemeContext";
+
 interface InputProps {
   id: string;
   label: string;
@@ -17,9 +19,14 @@ export default function Input({
   placeholder, 
   required = false 
 }: InputProps) {
+  const { isHighContrast } = useTheme();
   return (
     <div>
-      <label htmlFor={id} className="block text-[16px] text-[#192B5A] mb-2" style={{  fontFamily: 'var(--font-dosis)', fontWeight: '800'  }}>
+      <label
+        htmlFor={id}
+        className={`block text-[16px] mb-2 ${isHighContrast ? 'text-white' : 'text-[#192B5A]'}`}
+        style={{ fontFamily: 'var(--font-dosis)', fontWeight: '800' }}
+      >
         {label}
       </label>
       <input

@@ -7,8 +7,10 @@ import Image from "next/image";
 import RedLogo from "@/components/RedLogo";
 import Input from "@/components/Input";
 import { signInUser } from "@/lib/auth";
+import { useTheme } from "@/contexts/ThemeContext";
 
 export default function LoginPage() {
+  const { isHighContrast } = useTheme();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -56,12 +58,15 @@ export default function LoginPage() {
   return (
     <main 
       className="h-screen relative overflow-hidden"
-      style={{
-        backgroundImage: `url('/assets/background-1.svg')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }}
+      style={isHighContrast
+        ? { background: "#000" }
+        : {
+            backgroundImage: `url('/assets/background-1.svg')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat'
+          }
+      }
     >
       <section className="relative z-10">
         <div className="relative flex justify-center p-6">
@@ -78,7 +83,10 @@ export default function LoginPage() {
         </div>
 
         <div>
-          <h1 className="font-bold text-center text-[#192B5A] mb-2 mt-2" style={{ fontSize: '30px' }}>
+          <h1
+            className={`font-bold text-center mb-2 mt-2 ${isHighContrast ? 'text-white' : 'text-[#192B5A]'}`}
+            style={{ fontSize: '30px' }}
+          >
             Log ind
           </h1>
 
@@ -144,7 +152,10 @@ export default function LoginPage() {
           </div>
         )}
 
-        <p className="text-center text-sm text-[#192B5A] mt-6" style={{ fontFamily: 'var(--font-palanquin)' }}>
+        <p
+          className={`text-center text-sm mt-6 ${isHighContrast ? 'text-white' : 'text-[#192B5A]'}`}
+          style={{ fontFamily: 'var(--font-palanquin)' }}
+        >
           Har du ikke en konto?{" "}
           <Link href="/signup" className="text-(--color-primary) font-medium hover:underline" style={{ fontFamily: 'var(--font-palanquin)' }}>
             Opret en her
