@@ -194,7 +194,7 @@ export default function TicketsPage() {
                   </div>
                 </div>
 
-                <div className="bg-[#F5E6D3] rounded-lg p-6 mb-6">
+                <div className="bg-[#F5E6D3] rounded-lg p-6 mb-20">
                   <h3 className="text-[#B2182B] font-bold text-lg mb-4">Dine sæder:</h3>
                   <div className="flex flex-wrap gap-2 justify-center mb-4">
                     {selectedTicket.seats.map((seat, i) => (
