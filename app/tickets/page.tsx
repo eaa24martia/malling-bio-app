@@ -169,15 +169,22 @@ export default function TicketsPage() {
           title="Din billet" 
           size="md"
         >
-          <div className="relative min-h-full bg-[#410c1082] px-4 md:px-6 pb-4">
+          <div className="relative min-h-full bg-[#410c1082] px-4 md:px-6 pb-20">
             {selectedTicket && (
               <div className="text-center py-8">
-                <div className="mb-6">
-                  <img 
-                    src={selectedTicket.moviePosterUrl} 
-                    alt={selectedTicket.movieTitle}
-                    className="w-48 h-64 object-cover rounded-lg mx-auto mb-4 shadow-xl"
+                 {/* QR Code */}
+                <div className="bg-white rounded-lg p-4 mb-4 flex flex-col items-center mx-auto max-w-[200px]">
+                  <img
+                    src={`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(selectedTicket.id)}`}
+                    alt={`QR code for ticket ${selectedTicket.id}`}
+                    className="w-40 h-40 object-contain"
                   />
+                  <div className="text-center text-[#192B5A] text-xs mt-2 font-mono">
+                    {selectedTicket.id.toUpperCase().slice(0, 12)}
+                  </div>
+                </div>
+                
+                <div className="mb-6">
                   <div className="text-white text-2xl font-bold mb-3">{selectedTicket.movieTitle}</div>
                   <div className="text-white/90 text-base mb-2">
                     {getDayLabel(selectedTicket.datetime)} {formatDate(selectedTicket.datetime)} kl. {formatTime(selectedTicket.datetime)}
@@ -212,28 +219,7 @@ export default function TicketsPage() {
                   </div>
                 </div>
 
-                {/* Barcode */}
-                <div className="bg-white rounded-lg p-4 mb-4">
-                  <div className="flex justify-center gap-0.5 h-20">
-                    {Array.from({ length: 50 }).map((_, i) => (
-                      <div
-                        key={i}
-                        className="bg-black"
-                        style={{
-                          width: '3px',
-                          height: `${Math.random() * 60 + 40}%`,
-                        }}
-                      />
-                    ))}
-                  </div>
-                  <div className="text-center text-[#192B5A] text-xs mt-2 font-mono">
-                    {selectedTicket.id.toUpperCase().slice(0, 12)}
-                  </div>
-                </div>
-
-                <div className="text-white/70 text-sm">
-                  Vis denne billet ved indgangen
-                </div>
+               
               </div>
             )}
           </div>

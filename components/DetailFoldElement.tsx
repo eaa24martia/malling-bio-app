@@ -682,10 +682,10 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
               <div className="text-white text-xl font-bold mb-2">{movieTitle}</div>
               {selectedShowtime && (
                 <>
-                  <div className="text-white/80 text-sm mb-1">
+                  <div className="text-white/80 text-[16px] mb-1">
                     {getDayLabel(selectedShowtime.datetime)} {formatDate(selectedShowtime.datetime)} - {formatTime(selectedShowtime.datetime)}
                   </div>
-                  <div className="text-white/80 text-sm mb-1">
+                  <div className="text-white/80 text-[16px] mb-1">
                     {selectedShowtime.auditorium} • {selectedShowtime.language}
                   </div>
                 </>
@@ -709,7 +709,7 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
             </div>
 
             <div className="text-white/70 text-sm mb-6">
-              Din billet er blevet sendt til din e-mail
+              Billetten kan findes under "Billetter" eller "Mine billetter" under din profil.
             </div>
 
             <CreateButton onClick={() => setIsTicketConfirmationOpen(false)}>
