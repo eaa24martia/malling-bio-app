@@ -1,5 +1,6 @@
 "use client";
 
+// Importerer nødvendige hooks og komponenter
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -10,7 +11,9 @@ import { signUpUser } from "@/lib/auth";
 import { useTheme } from "@/contexts/ThemeContext";
 
 export default function SignupPage() {
+  // Henter high-contrast state fra tema-context
   const { isHighContrast } = useTheme();
+  // State til inputfelter, fejlbesked og loading
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -19,39 +22,33 @@ export default function SignupPage() {
 
   const router = useRouter();
 
+  // Låser scroll på signup-siden
   useEffect(() => {
-    // Disable scrolling on this page
     document.body.style.overflow = 'hidden';
-    
-    // Re-enable scrolling when component unmounts
+    // Genskaber scroll ved unmount
     return () => {
       document.body.style.overflow = 'auto';
     };
   }, []);
 
+  // Håndterer signup-formularen
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-
-    // Basic validation
+    // Simpel validering
     if (!name.trim()) {
       return setError("Navn er påkrævet");
     }
-
     if (!email.trim()) {
       return setError("E-mail er påkrævet");
     }
-
     if (password.length < 6) {
       return setError("Adgangskoden skal være mindst 6 tegn");
     }
-
     setLoading(true);
-
     try {
       await signUpUser({ name: name.trim(), email: email.trim(), password });
-      
-      // Redirect to login page after successful signup
+      // Omdiriger til login ved succes
       router.push("/login");
     } catch (error: any) {
       setError(error.message);
@@ -74,6 +71,7 @@ export default function SignupPage() {
       }
     >
       <section className="relative z-10">
+        {/* Header med tilbage-knap og logo */}
         <div className="relative flex justify-center p-6">
           <Link href="/" className="absolute left-6 flex items-center hover:opacity-80 transition-opacity">
             <Image
@@ -83,20 +81,18 @@ export default function SignupPage() {
               height={26}
             />
           </Link>
-          
           <RedLogo/>
         </div>
-
         <div>
+          {/* Titel */}
           <h1
             className={`font-bold text-center mb-2 mt-2 ${isHighContrast ? 'text-white' : 'text-[#192B5A]'}`}
             style={{ fontSize: '30px' }}
           >
             Opret ny bruger
           </h1>
-
+        {/* Signup-formular */}
         <section className="flex flex-col justify-center p-6">
- 
           <form id="signupForm" onSubmit={handleSubmit} className="space-y-4">
             <Input
               id="name"
@@ -107,7 +103,6 @@ export default function SignupPage() {
               placeholder="Dit fornavn"
               required
             />
-
             <Input
               id="email"
               label="E-mail"
@@ -117,7 +112,6 @@ export default function SignupPage() {
               placeholder="din@gmail.com"
               required
             />
-
             <Input
               id="password"
               label="Adgangskode"
@@ -129,7 +123,7 @@ export default function SignupPage() {
             />
           </form>
         </section>
-
+        {/* Opret bruger-knap */}
         <div className="flex justify-center mt-2">
           <button 
             type="submit" 
@@ -158,7 +152,7 @@ export default function SignupPage() {
             {loading ? "Opretter bruger..." : "Opret bruger"}
           </button>
         </div>
-
+        {/* Fejlbesked vises hvis der er fejl */}
         {error && (
           <div className="text-center mt-4">
             <p className="text-red-600 text-sm" style={{ fontFamily: 'var(--font-palanquin)' }}>
@@ -166,7 +160,7 @@ export default function SignupPage() {
             </p>
           </div>
         )}
-
+        {/* Link til login hvis man allerede har en konto */}
         <p
           className={`text-center text-sm mt-6 ${isHighContrast ? 'text-white' : 'text-[#192B5A]'}`}
           style={{ fontFamily: 'var(--font-palanquin)' }}
