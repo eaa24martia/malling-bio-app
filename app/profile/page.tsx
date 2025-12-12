@@ -1,5 +1,6 @@
 "use client";
 
+// Importerer nødvendige hooks og komponenter
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { onAuthStateChanged } from "firebase/auth";
@@ -11,21 +12,23 @@ import SettingElement from "@/components/SettingElement";
 import { useTheme } from "@/contexts/ThemeContext";
 
 export default function ProfilePage() {
+  // State til brugernavn, email og loading
   const [userName, setUserName] = useState<string>("");
   const [userEmail, setUserEmail] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const { isHighContrast } = useTheme();
 
+  // Tjekker om brugeren er logget ind, ellers redirect til login
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        // User is signed in
+        // Bruger er logget ind
         setUserName(user.displayName || "Bruger");
         setUserEmail(user.email || "");
         setLoading(false);
       } else {
-        // User is not signed in, redirect to login
+        // Bruger er ikke logget ind, redirect til login
         router.push("/login");
       }
     });
@@ -33,6 +36,7 @@ export default function ProfilePage() {
     return () => unsubscribe();
   }, [router]);
 
+  // Viser loading-indikator mens brugerdata hentes
   if (loading) {
     return (
       <main className="min-h-screen relative flex items-center justify-center"
@@ -55,6 +59,7 @@ export default function ProfilePage() {
     );
   }
 
+  // Hovedindhold for profilsiden
   return (
     <main className="min-h-screen relative"
         style={
@@ -72,10 +77,12 @@ export default function ProfilePage() {
               }
         }>
 
+        {/* Header med rød topbar */}
         <section className="relative z-10">
                   <RedHeader />
         </section>
 
+        {/* Velkomsthilsen og profilbillede */}
         <div className="pt-20">
             <h1 className="font-bold text-center mb-0 mt-5" style={{ fontSize: '30px', color: 'var(--text)' }}>
             Hej {userName}!
@@ -83,11 +90,12 @@ export default function ProfilePage() {
            <ProfilePicture />
         </div>
 
+        {/* Indstillinger (modal, log ud, kontrast mm.) */}
         <section>
             <SettingElement />
         </section>
 
-     {/* Bottom Navigation */}
+     {/* Bundnavigation */}
             <BottomNav />
 
         
