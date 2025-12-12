@@ -1,5 +1,6 @@
 "use client";
 
+// Importerer nødvendige hooks og komponenter
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { onAuthStateChanged } from "firebase/auth";
@@ -13,11 +14,13 @@ import EventsSlider from "@/components/EventsSlider";
 import BottomNav from "@/components/BottomNav";
 
 export default function HomePage() {
+  // State til brugernavn og loading
   const [userName, setUserName] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const { isHighContrast } = useTheme();
 
+  // Tjekker om brugeren er logget ind, ellers redirect til login
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -31,6 +34,7 @@ export default function HomePage() {
     return () => unsubscribe();
   }, [router]);
 
+  // Viser loading-indikator mens brugerdata hentes
   if (loading) {
     return (
       <div className="fixed inset-0 flex items-center justify-center"
@@ -50,7 +54,7 @@ export default function HomePage() {
 
   return (
     <>
-      {/* Fixed background layer */}
+      {/* Fast baggrundslag */}
       <div 
         className="fixed inset-0 z-0"
         style={
@@ -65,17 +69,19 @@ export default function HomePage() {
         }
       />
       
-      {/* Content layer */}
+      {/* Indholdslag */}
       <main className="relative z-10 pb-20">
+        {/* Header med rød topbar */}
         <section className="relative z-10">
           <RedHeader />
         </section>
 
+        {/* Hero/preview carousel */}
         <header>
           <PreviewCarousel />
         </header>
 
-        {/* Current Movies Section */}
+        {/* Aktuelle film sektion */}
         <section>
           <h2 className="text-white text-[16px] font-bold mb-2 drop-shadow-lg pl-4 pt-4">
             Aktuelle film
@@ -85,7 +91,7 @@ export default function HomePage() {
 
         <div className="h-px bg-[#ffffff] my-6"></div>
 
-        {/* Upcoming Movies Section */}
+        {/* Kommende film sektion */}
         <section>
           <h2 className="text-white text-[16px] font-bold mb-2 drop-shadow-lg pl-4 pt-0">
             Kommende film
@@ -95,7 +101,7 @@ export default function HomePage() {
 
         <div className="h-px bg-[#ffffff] my-6 mb-4"></div>
 
-        {/* Events Section */}
+        {/* Events sektion */}
         <section className="mb-2.5">
           <h2 className="text-white text-[16px] font-bold mb-2 drop-shadow-lg pl-4 pt-0">
             Det sker i Malling Bio
@@ -103,7 +109,7 @@ export default function HomePage() {
           <EventsSlider />
         </section>
 
-        {/* Bottom Navigation */}
+        {/* Bundnavigation */}
         <BottomNav />
       </main>
     </>
