@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -45,10 +44,6 @@ export default function UpcomingSlider() {
     }
   };
 
-  const handleMovieClick = (movie: Movie) => {
-    router.push(`/movie/${movie.id}`);
-  };
-
   return (
     <div className="w-full px-2">
       {/* VIEWPORT */}
@@ -58,16 +53,15 @@ export default function UpcomingSlider() {
           {movies.map((movie) => (
             <div key={movie.id} className="flex-none">
               {/* MOVIE POSTER CARD */}
-              <button
-                onClick={() => handleMovieClick(movie)}
-                className="h-[150px] w-[104px] rounded-lg overflow-hidden shadow-lg hover:scale-105 transition-transform cursor-pointer"
+              <div
+                className="h-[150px] w-[104px] rounded-lg overflow-hidden shadow-lg"
               >
                 <img 
                   src={movie.posterUrl} 
                   alt={movie.title} 
                   className="w-full h-full object-cover"
                 />
-              </button>
+              </div>
             </div>
           ))}
         </div>
