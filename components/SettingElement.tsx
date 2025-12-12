@@ -110,36 +110,23 @@ export default function SettingElement() {
     size="md"
   >
     <div className="relative min-h-full" style={{ background: isHighContrast ? '#000' : '#410C10' }}>
-      {/* IMAGE HERO as background with overlay */}
-      <section className="relative w-full h-64 md:h-72 flex items-end justify-center overflow-hidden">
-        <div
-          className="absolute inset-0 z-0"
-          style={{
-            backgroundImage: `url(https://www.biografinfo.dk/cm-webpic/malling1ny1.jpg)`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            filter: isHighContrast ? 'brightness(0.5)' : 'brightness(0.7)',
-          }}
-        />
-        {/* Overlay */}
-        <div
-          className="absolute inset-0 z-10"
-          style={{
-            background: isHighContrast
-              ? 'rgba(0,0,0,0.85)'
-              : 'rgba(65,12,16,0.85)'
-          }}
+      {/* IMAGE HERO */}
+      <section className="relative w-full h-64 md:h-72">
+        <img
+          src="https://www.biografinfo.dk/cm-webpic/malling1ny1.jpg"
+          alt=""
+          className="w-full h-full object-cover object-top"
         />
         {/* Gradient fade into background */}
         <div
-          className="absolute inset-0 z-20 pointer-events-none"
+          className="absolute inset-0 pointer-events-none"
           style={{
             background: `linear-gradient(to bottom, transparent, ${isHighContrast ? '#000' : '#410C10'})`
           }}
         />
       </section>
       {/* TEXT CONTENT */}
-      <div className="px-6 py-10 pb-50 text-center text-[--text] space-y-8 max-w-prose mx-auto relative z-30">
+      <div className="px-6 py-10 pb-50 text-center text-[--text] space-y-8 max-w-prose mx-auto">
         <p>
           Malling Bio er en lille, lokal biograf med stor betydning for byen. I generationer har den været
           et naturligt samlingspunkt for familier, venner og filmelskere i Malling og oplandet. Her kommer
