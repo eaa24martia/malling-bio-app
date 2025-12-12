@@ -1,5 +1,6 @@
 "use client";
 
+// Importerer nødvendige hooks, Firebase og komponenter
 import { useState, useEffect } from "react";
 import { collection, query, where, getDocs, orderBy } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
@@ -10,8 +11,10 @@ import TicketCard from "@/components/TicketContainer";
 import Modal from "@/components/Modal";
 import { useTheme } from "@/contexts/ThemeContext";
 
+// Sæde-type
 type Seat = { row: number; seat: number };
 
+// Ticket interface til typesikkerhed
 interface Ticket {
   id: string;
   userId: string;
@@ -32,12 +35,14 @@ interface Ticket {
 }
 
 export default function TicketsPage() {
+  // State til billetter, loading, valgt billet og modal
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { isHighContrast } = useTheme();
 
+  // Lyt efter login-status og hent billetter for brugeren
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -51,6 +56,7 @@ export default function TicketsPage() {
     return () => unsubscribe();
   }, []);
 
+  // Henter brugerens aktive billetter fra Firestore
   const loadUserTickets = async (userId: string) => {
     try {
       const ticketsRef = collection(db, "tickets");
@@ -78,11 +84,13 @@ export default function TicketsPage() {
     }
   };
 
+  // Tjekker om billetten er udløbet
   const isExpired = (datetime: Date) => {
     const now = new Date();
     return datetime < now;
   };
 
+  // Håndter klik på billet (åbner modal hvis billetten ikke er udløbet)
   const handleTicketClick = (ticket: Ticket) => {
     if (!isExpired(ticket.datetime)) {
       setSelectedTicket(ticket);
@@ -90,18 +98,21 @@ export default function TicketsPage() {
     }
   };
 
+  // Formaterer dato til dd/mm
   const formatDate = (date: Date) => {
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
     return `${day}/${month}`;
   };
 
+  // Formaterer tid til hh.mm
   const formatTime = (date: Date) => {
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
     return `${hours}.${minutes}`;
   };
 
+  // Returnerer dansk label for dag (I dag, I morgen, eller ugedag)
   const getDayLabel = (date: Date) => {
     const days = ['Søn.', 'Man.', 'Tirs.', 'Ons.', 'Tors.', 'Fre.', 'Lør.'];
     const today = new Date();
@@ -118,6 +129,7 @@ export default function TicketsPage() {
     return days[date.getDay()];
   };
 
+  // UI rendering
   return (
     <main className="min-h-screen relative"
       style={
@@ -134,10 +146,12 @@ export default function TicketsPage() {
             }
       }>
 
+      {/* Header med rød topbar */}
       <section className="relative z-10">
         <RedHeader />
       </section>
 
+      {/* Titel og divider */}
       <div className="pt-20">
         <h1 className="font-bold text-center mb-0 mt-5" style={{ fontSize: '30px', color: isHighContrast ? 'var(--text)' : '#192B5A' }}>
           Billetter
@@ -145,6 +159,7 @@ export default function TicketsPage() {
         <div className="h-0.5 my-4 w-full" style={{ backgroundColor: isHighContrast ? 'var(--border)' : '#192B5A' }}></div>
       </div>
 
+      {/* Liste over billetter */}
       <section className="space-y-6 pb-20 mb-10 px-4">
         {loading ? (
           <div className="text-center py-10" style={{ color: isHighContrast ? 'var(--text)' : '#192B5A' }}>
@@ -168,10 +183,10 @@ export default function TicketsPage() {
         )}
       </section>
 
-      {/* Bottom Navigation */}
+      {/* Bundnavigation */}
       <BottomNav />
 
-      {/* Ticket Detail Modal */}
+      {/* Modal med billetdetaljer */}
       <Modal 
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
@@ -181,7 +196,7 @@ export default function TicketsPage() {
         <div className="relative min-h-full px-4 md:px-6 pb-20" style={{ background: isHighContrast ? 'var(--surface)' : '#410c1082' }}>
           {selectedTicket && (
             <div className="text-center py-8">
-              {/* QR Code */}
+              {/* QR-kode og billetinfo */}
               <div className="bg-white rounded-lg p-4 mb-4 flex flex-col items-center mx-auto max-w-[200px]" style={{ background: isHighContrast ? 'var(--surface)' : '#fff' }}>
                 <img
                   src={`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(selectedTicket.id)}`}
