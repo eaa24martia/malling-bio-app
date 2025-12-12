@@ -2,6 +2,7 @@
 "use client";
 
 import useEmblaCarousel from "embla-carousel-react";
+import { useRouter } from "next/navigation";
 
 type Slide = {
   id: number;
@@ -28,6 +29,7 @@ const SLIDES: Slide[] = [
 ];
 
 export default function EventsSlider() {
+  const router = useRouter();
   const [emblaRef] = useEmblaCarousel({ 
     align: "start", 
     loop: false,
@@ -39,14 +41,18 @@ export default function EventsSlider() {
 
   return (
     <div className="w-full px-2">
-      {/* VIEWPORT */}
       <div className="overflow-hidden" ref={emblaRef}>
-        {/* TRACK / CONTAINER */}
         <div className="flex gap-4">
           {SLIDES.map((slide) => (
             <div key={slide.id} className="flex-none">
-              {/* MOVIE POSTER CARD */}
-              <div className="h-[104px] w-[154px] rounded-lg overflow-hidden shadow-lg">
+              <div
+                className="h-[104px] w-[154px] rounded-lg overflow-hidden shadow-lg cursor-pointer hover:opacity-80 transition"
+                onClick={() => router.push("/events")}
+                tabIndex={0}
+                role="button"
+                aria-label={`Gå til event: ${slide.title}`}
+                onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') router.push("/events"); }}
+              >
                 <img 
                   src={slide.image} 
                   alt={slide.title} 
