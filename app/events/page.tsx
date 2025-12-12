@@ -1,14 +1,16 @@
 "use client";
 
+// Importerer nødvendige komponenter og tema-hook
 import BottomNav from "@/components/BottomNav";
 import EventCard from "@/components/EventCard";
 import RedHeader from "@/components/Header";
 import { useTheme } from "@/contexts/ThemeContext";
 
 export default function EventsPage() {
+  // Henter high-contrast state fra tema-context
   const { isHighContrast } = useTheme();
   return (
-
+    // Hovedbaggrund for events-siden
     <main className="min-h-screen relative"
         style={
           isHighContrast
@@ -20,18 +22,18 @@ export default function EventsPage() {
                 backgroundRepeat: 'no-repeat'
               }
         }>
-
+        {/* Header med rød topbar */}
         <section className="relative z-10">
                   <RedHeader />
         </section>
-
+        {/* Titel og divider */}
         <div className="pt-20">
            <h1 className="font-bold text-center mb-0 mt-5" style={{ fontSize: '30px', color: isHighContrast ? '#fff' : '#192B5A' }}>
             Arrangementer
           </h1>
              <div className="h-0.5 my-4" style={{ backgroundColor: isHighContrast ? '#fff' : '#192B5A' }}></div>
         </div>
-
+    {/* Event cards sektion */}
     <section className="space-y-6 pb-20 mb-10">
          <EventCard
     image="https://www.biografinfo.dk/cm-webpic/malling1ny1.jpg"
@@ -41,7 +43,6 @@ export default function EventsPage() {
     season="Forår"
     year="2026"
   />
-
   <EventCard
     image="https://bornibyen.dk/entries/14937-de-5-cafeer-med-udsyn-til-barnevognen/og_image"
     alt="Babybio"
@@ -50,7 +51,6 @@ export default function EventsPage() {
     season="Jan."
     year="26"
   />
-
   <EventCard
     image="https://cdn.sanity.io/images/h56zgnhl/retnemt/5bae04e4d4444334d10355df085e8b864e372a8b-1920x1080.jpg"
     alt="Julefrokost"
@@ -59,13 +59,9 @@ export default function EventsPage() {
     season="Dec."
     year="18"
   />
-
     </section>
-
-     {/* Bottom Navigation */}
+     {/* Bundnavigation */}
             <BottomNav />
-
-        
     </main>
   );
 }
