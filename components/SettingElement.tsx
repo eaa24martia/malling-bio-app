@@ -104,63 +104,65 @@ export default function SettingElement() {
 
       {/* Om Malling Bio Modal */}
      <Modal
-  isOpen={isModalOpen}
-  onClose={() => setIsModalOpen(false)}
-  title="Om Malling Bio"
-  size="md"
->
-  <div
-    className="relative min-h-full"
-    style={{
-      background: isHighContrast ? '#000 !important' : '#410C10 !important',
-      backgroundColor: isHighContrast ? '#000 !important' : '#410C10 !important',
-    }}
+    isOpen={isModalOpen}
+    onClose={() => setIsModalOpen(false)}
+    title="Om Malling Bio"
+    size="md"
   >
-    {/* IMAGE HERO */}
-    <section className="relative w-full h-64 md:h-72">
-      <img
-        src="https://www.biografinfo.dk/cm-webpic/malling1ny1.jpg"
-        alt=""
-        className="w-full h-full object-cover object-top"
-      />
-
-      {/* Gradient fade into background */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: `linear-gradient(to bottom, transparent, ${isHighContrast ? '#000' : '#410C10'})`
-        }}
-      />
-    </section>
-
-    {/* TEXT CONTENT */}
-    <div className="px-6 py-10 pb-50 text-center text-[--text] space-y-8 max-w-prose mx-auto">
-      <p>
-        Malling Bio er en lille, lokal biograf med stor betydning for byen. I generationer har den været
-        et naturligt samlingspunkt for familier, venner og filmelskere i Malling og oplandet. Her kommer
-        man ikke kun for at se film – man kommer for stemningen, fællesskabet og nærheden.
-      </p>
-
-      <p>
-        Biografen drives med kærlighed til film og til lokalmiljøet. Programmet spænder fra store
-        premierer til mindre, håndplukkede titler, som vi ved, at vores gæster sætter pris på. Det hele
-        foregår i en afslappet og hyggelig atmosfære, hvor der er plads til både spontane biografture og
-        planlagte aftener.
-      </p>
-
-      <p>
-        Vi arbejder for at gøre biografoplevelsen enkel og overskuelig – både når du vælger dine sæder,
-        køber billetter og sætter dig til rette i salen. Malling Bio skal være et varmt og velkomment sted,
-        hvor du føler dig hjemme, uanset om du kommer alene eller i selskab.
-      </p>
-
-      <p>
-        For os handler biograf ikke kun om film på lærredet. Det handler om at skabe gode stunder, støtte
-        det lokale kulturliv og føre en Malling-tradition videre.
-      </p>
+    <div className="relative min-h-full" style={{ background: isHighContrast ? '#000' : '#410C10' }}>
+      {/* IMAGE HERO as background with overlay */}
+      <section className="relative w-full h-64 md:h-72 flex items-end justify-center overflow-hidden">
+        <div
+          className="absolute inset-0 z-0"
+          style={{
+            backgroundImage: `url(https://www.biografinfo.dk/cm-webpic/malling1ny1.jpg)`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            filter: isHighContrast ? 'brightness(0.5)' : 'brightness(0.7)',
+          }}
+        />
+        {/* Overlay */}
+        <div
+          className="absolute inset-0 z-10"
+          style={{
+            background: isHighContrast
+              ? 'rgba(0,0,0,0.85)'
+              : 'rgba(65,12,16,0.85)'
+          }}
+        />
+        {/* Gradient fade into background */}
+        <div
+          className="absolute inset-0 z-20 pointer-events-none"
+          style={{
+            background: `linear-gradient(to bottom, transparent, ${isHighContrast ? '#000' : '#410C10'})`
+          }}
+        />
+      </section>
+      {/* TEXT CONTENT */}
+      <div className="px-6 py-10 pb-50 text-center text-[--text] space-y-8 max-w-prose mx-auto relative z-30">
+        <p>
+          Malling Bio er en lille, lokal biograf med stor betydning for byen. I generationer har den været
+          et naturligt samlingspunkt for familier, venner og filmelskere i Malling og oplandet. Her kommer
+          man ikke kun for at se film – man kommer for stemningen, fællesskabet og nærheden.
+        </p>
+        <p>
+          Biografen drives med kærlighed til film og til lokalmiljøet. Programmet spænder fra store
+          premierer til mindre, håndplukkede titler, som vi ved, at vores gæster sætter pris på. Det hele
+          foregår i en afslappet og hyggelig atmosfære, hvor der er plads til både spontane biografture og
+          planlagte aftener.
+        </p>
+        <p>
+          Vi arbejder for at gøre biografoplevelsen enkel og overskuelig – både når du vælger dine sæder,
+          køber billetter og sætter dig til rette i salen. Malling Bio skal være et varmt og velkomment sted,
+          hvor du føler dig hjemme, uanset om du kommer alene eller i selskab.
+        </p>
+        <p>
+          For os handler biograf ikke kun om film på lærredet. Det handler om at skabe gode stunder, støtte
+          det lokale kulturliv og føre en Malling-tradition videre.
+        </p>
+      </div>
     </div>
-  </div>
-</Modal>
+  </Modal>
     </div>
   );
 }
