@@ -1,12 +1,14 @@
 // components/MovieSlider.tsx
 "use client";
 
+// Importerer hooks, router, carousel og Firestore
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import useEmblaCarousel from "embla-carousel-react";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
+// Movie-type til typesikkerhed
 type Movie = {
   id: string;
   title: string;
@@ -15,8 +17,10 @@ type Movie = {
 };
 
 export default function MovieSlider() {
+  // Initialiserer router og state til film
   const router = useRouter();
   const [movies, setMovies] = useState<Movie[]>([]);
+  // Initialiserer carousel med Embla
   const [emblaRef] = useEmblaCarousel({ 
     align: "start", 
     loop: false,
@@ -26,12 +30,12 @@ export default function MovieSlider() {
     duration: 25
   });
 
-  // Load current movies from Firestore
+  // Henter aktuelle film fra Firestore ved mount
   useEffect(() => {
     const loadMovies = async () => {
       try {
         const moviesRef = collection(db, "movies");
-        // Only fetch movies where isUpcoming is false
+        // Hent kun film hvor isUpcoming er false
         const q = query(moviesRef, where("isUpcoming", "==", false));
         const snapshot = await getDocs(q);
         const moviesData = snapshot.docs.map(doc => ({
@@ -45,20 +49,20 @@ export default function MovieSlider() {
         console.error("Error loading movies:", error);
       }
     };
-
     loadMovies();
   }, []);
 
+  // Naviger til filmdetalje ved klik
   const handleMovieClick = (movie: Movie) => {
-    // Navigate to movie detail page using ID
     router.push(`/movie/${movie.id}`);
   };
 
+  // UI rendering af carousel med aktuelle film
   return (
     <div className="w-full px-2">
-      {/* VIEWPORT */}
+      {/* VIEWPORT til carousel */}
       <div className="overflow-hidden" ref={emblaRef}>
-        {/* TRACK / CONTAINER */}
+        {/* TRACK / CONTAINER til filmkort */}
         <div className="flex gap-4">
           {movies.length === 0 ? (
             <div className="text-white/50 text-sm px-4">Ingen film tilgængelig</div>

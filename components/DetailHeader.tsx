@@ -1,7 +1,9 @@
+// DetailHeader-komponent: Viser filmens header med baggrund, poster, trailer-knap og censur-badge
 "use client";
 
 import CreateButton from "./CreateButton";
 
+// Movie-type med relevante felter
 interface Movie {
   id: string;
   title: string;
@@ -12,23 +14,29 @@ interface Movie {
   ageRatingImageUrl?: string;
 }
 
+// Props for DetailHeader-komponenten
 interface DetailHeaderProps {
   movie: Movie;
 }
 
 export default function DetailHeader({ movie }: DetailHeaderProps) {
+  // Brug backdrop hvis tilgængelig, ellers poster
   const backdropUrl = movie.backdropUrl || movie.posterUrl;
+  // Brug custom censur-billede hvis tilgængelig, ellers fallback til standard-URL
   const ageRatingImage = movie.ageRatingImageUrl || `https://billet.mallingbio.dk/images/censur/censur-${movie.ageRating}.png`;
 
   return (
+    // Sektion med baggrundsbillede og overlay
     <section className="relative w-full h-90 md:h-80 overflow-hidden mt-10">
         <img 
           src={backdropUrl} 
           alt="" 
           className="w-full h-full object-cover object-top"
         />
+        {/* Gradient-overlay for læsbarhed */}
          <div className="absolute inset-0 bg-linear-to-b from-[#00000024] to-[#000000] pointer-events-none"></div>
 
+         {/* Trailer-knap hvis trailer findes */}
          {movie.trailerUrl && (
            <div className="absolute top-30 left-[-9%] z-7 scale-75">
              <a
@@ -45,6 +53,7 @@ export default function DetailHeader({ movie }: DetailHeaderProps) {
            </div>
          )}
 
+         {/* Poster og censur-badge */}
          <div className="absolute inset-0 flex items-end justify-center pb-8 z-5">
            <div className="relative">
              <img 
@@ -61,4 +70,4 @@ export default function DetailHeader({ movie }: DetailHeaderProps) {
          </div>
     </section>
   );
-}       
+}

@@ -1,13 +1,15 @@
+// Input-komponent: Genanvendelig inputfelt med label og tema-understøttelse
 import { useTheme } from "@/contexts/ThemeContext";
 
+// Props for Input-komponenten
 interface InputProps {
-  id: string;
-  label: string;
-  type?: "text" | "email" | "password";
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  placeholder?: string;
-  required?: boolean;
+  id: string; // Unik id til input og label
+  label: string; // Label-tekst
+  type?: "text" | "email" | "password"; // Input-type
+  value: string; // Værdi i inputfeltet
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void; // Ændringshandler
+  placeholder?: string; // Placeholder-tekst
+  required?: boolean; // Om feltet er påkrævet
 }
 
 export default function Input({ 
@@ -19,9 +21,11 @@ export default function Input({
   placeholder, 
   required = false 
 }: InputProps) {
+  // Henter high-contrast state fra tema-context
   const { isHighContrast } = useTheme();
   return (
     <div>
+      {/* Label for inputfeltet, farve afhænger af high-contrast */}
       <label
         htmlFor={id}
         className={`block text-[16px] mb-2 ${isHighContrast ? 'text-white' : 'text-[#192B5A]'}`}
@@ -29,6 +33,7 @@ export default function Input({
       >
         {label}
       </label>
+      {/* Selve inputfeltet med styling og props */}
       <input
         type={type}
         id={id}

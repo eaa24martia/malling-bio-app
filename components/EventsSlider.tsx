@@ -1,15 +1,18 @@
 // components/MovieSlider.tsx
+// EventsSlider-komponent: Viser en horisontal slider med events, brug af Embla-carousel og Next.js router
 "use client";
 
 import useEmblaCarousel from "embla-carousel-react";
 import { useRouter } from "next/navigation";
 
+// Type for hvert slide/event
 type Slide = {
   id: number;
   image: string;
   title: string;
 };
 
+// Dummy data til slides/events
 const SLIDES: Slide[] = [
   {
     id: 0,
@@ -29,7 +32,9 @@ const SLIDES: Slide[] = [
 ];
 
 export default function EventsSlider() {
+  // Next.js router til navigation
   const router = useRouter();
+  // Embla-carousel hook til slider reference og opsætning
   const [emblaRef] = useEmblaCarousel({ 
     align: "start", 
     loop: false,
@@ -41,8 +46,10 @@ export default function EventsSlider() {
 
   return (
     <div className="w-full px-2">
+      {/* Embla-carousel container */}
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex gap-4">
+          {/* Mapper alle events/slides */}
           {SLIDES.map((slide) => (
             <div key={slide.id} className="flex-none">
               <div
@@ -53,6 +60,7 @@ export default function EventsSlider() {
                 aria-label={`Gå til event: ${slide.title}`}
                 onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') router.push("/events"); }}
               >
+                {/* Event-billede */}
                 <img 
                   src={slide.image} 
                   alt={slide.title} 

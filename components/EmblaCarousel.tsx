@@ -1,9 +1,11 @@
 // components/WelcomeCarousel.tsx
+// WelcomeCarousel-komponent: Viser en introduktionsslider med Embla-carousel og dot-navigation
 "use client";
 
 import useEmblaCarousel from "embla-carousel-react";
 import { useCallback, useEffect, useState } from "react";
 
+// Type for hvert slide i karusellen
 type Slide = {
   id: number;
   image: string; // public path, e.g. "/carousel/seat.svg"
@@ -11,6 +13,7 @@ type Slide = {
   text: string;
 };
 
+// Data til slides i karusellen
 const SLIDES: Slide[] = [
   {
     id: 0,
@@ -39,14 +42,18 @@ const SLIDES: Slide[] = [
 ];
 
 export default function WelcomeCarousel() {
+  // Embla-carousel hook: emblaRef til DOM, emblaApi til styring
   const [emblaRef, emblaApi] = useEmblaCarousel({ align: "center", loop: false });
+  // State til at holde styr på valgt slide
   const [selectedIndex, setSelectedIndex] = useState(0);
 
+  // Callback til at opdatere valgt slide ved skift
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
     setSelectedIndex(emblaApi.selectedScrollSnap());
   }, [emblaApi]);
 
+  // Opsætning af event listeners på Embla-carousel
   useEffect(() => {
     if (!emblaApi) return;
     
@@ -58,6 +65,7 @@ export default function WelcomeCarousel() {
     };
   }, [emblaApi, onSelect]);
 
+  // Funktion til at skifte til bestemt slide
   const scrollTo = (index: number) => {
     if (!emblaApi) return;
     emblaApi.scrollTo(index);
@@ -65,13 +73,13 @@ export default function WelcomeCarousel() {
 
   return (
     <div className="w-full max-w-3xl mx-auto">
-      {/* VIEWPORT */}
+      {/* VIEWPORT for karusellen */}
       <div className="overflow-hidden" ref={emblaRef}>
-        {/* TRACK / CONTAINER */}
+        {/* TRACK / CONTAINER for slides */}
         <div className="flex">
           {SLIDES.map((slide) => (
             <div key={slide.id} className="min-w-full px-6">
-              {/* CARD (centered inside slide) */}
+              {/* Kort for hvert slide */}
               <div className="mx-auto max-w-lg bg-[#F2C9BC] rounded-2xl pl-6 pr-6 pt-2 h-[325px] w-[320px] flex flex-col">
                 <div className="flex justify-center mb-6">
                   <img src={slide.image} alt={slide.title} className="w-70 h-auto" />
@@ -90,7 +98,7 @@ export default function WelcomeCarousel() {
         </div>
       </div>
 
-      {/* DOTS */}
+      {/* DOTS til navigation mellem slides */}
       <div className="flex justify-center items-center gap-4 mt-6">
         {SLIDES.map((_, idx) => (
           <button

@@ -1,3 +1,4 @@
+// DetailFoldElement-komponent: Håndterer visning og booking af forestillinger, sædevalg, betaling og billetbekræftelse
 "use client";
 
 import { useState, useEffect } from "react";
@@ -8,6 +9,7 @@ import Modal from "./Modal";
 import PaymentContainer from "./PaymentContainer";
 import { useTheme } from "@/contexts/ThemeContext";
 
+// Typer for sæder og forestillinger
 type Seat = { row: number; seat: number };
 
 interface Showtime {
@@ -38,7 +40,9 @@ interface DetailFoldElementProps {
 }
 
 export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl }: DetailFoldElementProps) {
+  // Henter high-contrast state fra tema-context
   const { isHighContrast } = useTheme();
+  // State til forestillinger, valg, modaler og sæder
   const [showtimes, setShowtimes] = useState<Showtime[]>([]);
   const [selectedShowtime, setSelectedShowtime] = useState<Showtime | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -46,14 +50,15 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [isTicketConfirmationOpen, setIsTicketConfirmationOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
-
-  // Selected seats state
+  // Valgte sæder
   const [selectedSeatsList, setSelectedSeatsList] = useState<Seat[]>([]);
 
+  // Hent forestillinger fra Firestore ved load/ændring af film
   useEffect(() => {
     loadShowtimes();
   }, [movieId]);
 
+  // Loader forestillinger for filmen
   const loadShowtimes = async () => {
     try {
       const showtimesRef = collection(db, "showtimes");
@@ -83,6 +88,7 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
     }
   };
 
+  // Formaterer dato og tid til visning
   const formatDate = (date: Date) => {
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -95,6 +101,7 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
     return `${hours}.${minutes}`;
   };
 
+  // Returnerer unikke datoer for forestillinger
   const getDayLabel = (date: Date) => {
     const days = ['Søn.', 'Man.', 'Tirs.', 'Ons.', 'Tors.', 'Fre.', 'Lør.'];
     const today = new Date();
@@ -120,10 +127,12 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
     }));
   };
 
+  // Returnerer forestillinger for valgt dato
   const getShowtimesForDate = (dateStr: string) => {
     return showtimes.filter(st => formatDate(st.datetime) === dateStr);
   };
 
+  // Returnerer farve for tilgængelighed (grøn/gul/rød)
   const getAvailabilityColor = (showtime: Showtime) => {
     const percentAvailable = (showtime.seatsAvailable / showtime.totalSeats) * 100;
     if (percentAvailable > 50) return "bg-[#4CAF50]"; // green
@@ -131,6 +140,7 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
     return "bg-[#F44336]"; // red
   };
 
+  // Håndter valg af forestilling og loader sædekort
   const handleSelectShowtime = (showtime: Showtime) => {
     setSelectedShowtime(showtime);
     setIsModalOpen(false);
@@ -139,7 +149,7 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
     loadCurrentSeatMap(showtime.id);
   };
 
-  // Load current seat map with real-time seat availability
+  // Loader sædekort for valgt forestilling
   const loadCurrentSeatMap = async (showtimeId: string) => {
     try {
       const showtimeRef = doc(db, "showtimes", showtimeId);
@@ -161,7 +171,7 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
     }
   };
 
-  // Convert flat seat array to 2D array
+  // Konverterer sædekort til 2D-array hvis nødvendigt
   const convertToSeatMap = (showtime: Showtime): SeatStatus[][] => {
     const seatMap = showtime.seatMap;
     
@@ -193,9 +203,11 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
     });
   };
 
+  // Tjek om sæde er valgt
   const isSeatSelected = (row: number, seat: number) =>
     selectedSeatsList.some((s) => s.row === row && s.seat === seat);
 
+  // Håndterer betaling og opretter billet i Firestore
   const handlePaymentSuccess = async () => {
     try {
       const user = auth.currentUser;
@@ -204,7 +216,7 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
         return;
       }
 
-      // Create ticket data
+      // Opretter billetdata
       const ticketData = {
         userId: user.uid,
         userEmail: user.email,
@@ -223,16 +235,16 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
         status: "active", // active, used, cancelled
       };
 
-      // Save ticket to Firestore
+      // Gem billet til Firestore
       const ticketsRef = collection(db, "tickets");
       await addDoc(ticketsRef, ticketData);
 
-      // Update seat map to mark seats as taken
+      // Opdater sædekort for at markere sæder som optaget
       await updateSeatMapWithTakenSeats(selectedShowtime.id, selectedSeatsList);
 
       console.log("Ticket saved successfully!");
 
-      // Close payment modal and show confirmation
+      // Luk betalingsmodal og vis bekræftelse
       setIsPaymentModalOpen(false);
       setIsTicketConfirmationOpen(true);
     } catch (error) {
@@ -241,7 +253,7 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
     }
   };
 
-  // Update the showtime's seatMap to mark seats as taken
+  // Opdaterer sædekort i Firestore efter køb
   const updateSeatMapWithTakenSeats = async (showtimeId: string, seats: Seat[]) => {
     try {
       const showtimeRef = doc(db, "showtimes", showtimeId);
@@ -296,6 +308,7 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
     }
   };
 
+  // Komponent til visning af valgte sæder
   function SeatCard({ row, seat, onRemove }: { row: number; seat: number; onRemove?: () => void }) {
     return (
       <div className="flex items-center gap-2 bg-[#B2182B] rounded-lg px-3 py-2 relative">
@@ -319,6 +332,7 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
 
   return (
     <>
+      {/* Baggrund og call-to-action for at se tider */}
       <div
         className="w-full min-h-[360px] pb-20 rounded-[30px] relative overflow-hidden"
         style={
@@ -355,10 +369,10 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
         </section>
       </div>
 
-      {/* Times Modal */}
+      {/* Modal til valg af forestillingstidspunkt */}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Se tider" size="md">
         <div className="relative min-h-full px-4 md:px-6 pb-4" style={{ background: isHighContrast ? '#000' : '#410c1082' }}>
-          {/* Date Selector */}
+          {/* Dato Selector */}
           <section className="pt-6 pb-4">
             <h3 className="text-white text-sm font-semibold mb-3">Datoer</h3>
             <div className="flex gap-2 overflow-x-auto pb-2">
@@ -380,9 +394,9 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
           {/* Divider */}
           <div className="h-px bg-white mb-6" />
 
-          {/* Movie Info & Times */}
+          {/* Film Info & Tider */}
           <section className="flex gap-4">
-            {/* Movie Poster */}
+            {/* Film Plakat */}
             <div className="shrink-0">
               <img
                 src={moviePosterUrl}
@@ -391,7 +405,7 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
               />
             </div>
 
-            {/* Times */}
+            {/* Tider */}
             <div className="flex-1 overflow-hidden">
               <h4 className="text-white text-[20px] font-bold mb-4">{movieTitle}</h4>
               <div className="flex gap-3 overflow-x-auto pb-2 -mr-4 pr-4">
@@ -414,7 +428,7 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
         </div>
       </Modal>
 
-      {/* Seat Selection Modal */}
+      {/* Modal til sædevalg */}
       <Modal 
         isOpen={isSeatModalOpen} 
         onClose={() => setIsSeatModalOpen(false)} 
@@ -426,7 +440,7 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
         }}
       >
         <div className="relative px-0 pb-0 flex flex-col" style={{ height: 'calc(92vh - 55px)', background: isHighContrast ? '#000' : '#0e0607c0' }}>
-          {/* Category legend — non-interactive */}
+          {/* Kategori legend — non-interactive */}
           <section className="pt-2 pb-0 px-4 bg-[#670612]">
   <div className="flex items-center justify-between pb-2">
 
@@ -457,7 +471,7 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
   </div>
 </section>
 
-          {/* Screen */}
+          {/* Skærm */}
           <section className="mb-1 mt-6">
             <img src="/assets/screen.svg" alt="screen" className="w-48 object-cover justify-center mx-auto" />
           </section>
@@ -712,7 +726,7 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
   })()}
 </section>
 
-          {/* Selected Seats Summary */}
+          {/* Valgte Sæder Resumé */}
           <section className="bg-linear-to-b from-[#5A1419] to-[#b2182a] rounded-t-2xl p-3 pt-4 mt-auto">
             <h3 className="text-white text-sm font-bold mb-2 text-center">Valgte sæder</h3>
 
@@ -767,7 +781,7 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
         </div>
       </Modal>
 
-      {/* Payment Modal */}
+      {/* Modal til betaling */}
       <Modal 
         isOpen={isPaymentModalOpen} 
         onClose={() => setIsPaymentModalOpen(false)} 
@@ -785,7 +799,7 @@ export default function DetailFoldElement({ movieId, movieTitle, moviePosterUrl 
         </div>
       </Modal>
 
-      {/* Ticket Confirmation Modal */}
+      {/* Modal til billetbekræftelse */}
       <Modal isOpen={isTicketConfirmationOpen} onClose={() => setIsTicketConfirmationOpen(false)} title="Din billet" size="md">
         <div className="relative min-h-full px-4 md:px-6 pb-4" style={{ background: isHighContrast ? '#000' : '#410c1082' }}>
           <div className="text-center py-8">

@@ -1,38 +1,42 @@
 "use client";
 
+// Importerer hooks, tema og komponenter
 import { useState } from "react";
 import { useTheme } from "@/contexts/ThemeContext";
 import Input from "./Input";
 import CreateButton from "./CreateButton";
 
+// Props til PaymentContainer
 interface PaymentContainerProps {
   onPaymentSuccess?: () => void;
 }
 
 export default function PaymentContainer({ onPaymentSuccess }: PaymentContainerProps) {
+  // Henter high-contrast state fra tema-context
   const { isHighContrast } = useTheme();
+  // State til inputfelter
   const [cardNumber, setCardNumber] = useState("");
   const [expiryDate, setExpiryDate] = useState("");
   const [cvv, setCvv] = useState("");
   const [cardholderName, setCardholderName] = useState("");
 
+  // Håndterer betaling og kalder callback ved succes
   function handleSubmit(e?: React.FormEvent) {
     e?.preventDefault();
     console.log("Submitted:", { cardNumber, expiryDate, cvv, cardholderName });
-    // Simulate successful payment and trigger callback
+    // Simulerer succesfuld betaling og kalder callback
     if (onPaymentSuccess) {
       onPaymentSuccess();
     }
   }
 
+  // UI rendering af betalingsformular
   return (
     <section className="w-full min-h-screen flex items-center justify-center">
       <div className={isHighContrast ? "bg-black rounded-xl shadow-lg h-[445px] w-[365px] flex flex-col items-center -translate-y-20 pt-6 px-6" : "bg-[#FEEFE0] rounded-xl shadow-lg h-[445px] w-[365px] flex flex-col items-center -translate-y-20 pt-6 px-6"}>
-        
-        {/* Title */}
+        {/* Titel */}
         <h2 className={`text-[24px] font-bold mb-4 ${isHighContrast ? 'text-white' : 'text-[#192B53]'}`}>Kreditkort</h2>
-
-        {/* Form */}
+        {/* Formular */}
         <form id="paymentForm" onSubmit={handleSubmit} className="w-full space-y-4">
           <Input
             id="cardNumber"
@@ -45,7 +49,6 @@ export default function PaymentContainer({ onPaymentSuccess }: PaymentContainerP
             placeholder="1234 5678 9012 3456"
             required
           />
-
           <section className="flex flex-row gap-5 justify-center">
             <Input
               id="expiryDate"
@@ -58,7 +61,6 @@ export default function PaymentContainer({ onPaymentSuccess }: PaymentContainerP
               placeholder="MM/ÅÅ"
               required
             />
-
             <Input
               id="cvv"
               label="Sikkerhedskode"
@@ -71,7 +73,6 @@ export default function PaymentContainer({ onPaymentSuccess }: PaymentContainerP
               required
             />
           </section>
-
           <Input
             id="cardholderName"
             label="Kortholderens navn"
@@ -83,15 +84,13 @@ export default function PaymentContainer({ onPaymentSuccess }: PaymentContainerP
             placeholder="Navn på kort"
             required
           />
-
-          {/* Submit Button */}
+          {/* Betal-knap */}
           <div className="pt-2 flex justify-center">
             <CreateButton onClick={handleSubmit}>
               Betal
             </CreateButton>
           </div>
         </form>
-
       </div>
     </section>
   );

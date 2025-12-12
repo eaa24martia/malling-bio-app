@@ -1,11 +1,13 @@
 "use client";
 
+// Importerer nødvendige hooks, router, carousel og Firestore
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import useEmblaCarousel from "embla-carousel-react";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
+// Movie-type til typesikkerhed
 type Movie = {
   id: string;
   title: string;
@@ -14,8 +16,10 @@ type Movie = {
 };
 
 export default function UpcomingSlider() {
+  // State til kommende film
   const [movies, setMovies] = useState<Movie[]>([]);
   const router = useRouter();
+  // Initialiserer carousel med Embla
   const [emblaRef] = useEmblaCarousel({ 
     align: "start", 
     loop: false,
@@ -25,10 +29,12 @@ export default function UpcomingSlider() {
     duration: 25
   });
 
+  // Henter kommende film ved mount
   useEffect(() => {
     loadUpcomingMovies();
   }, []);
 
+  // Funktion til at hente kommende film fra Firestore
   const loadUpcomingMovies = async () => {
     try {
       const moviesRef = collection(db, "movies");
@@ -44,11 +50,12 @@ export default function UpcomingSlider() {
     }
   };
 
+  // UI rendering af carousel med kommende film
   return (
     <div className="w-full px-2">
-      {/* VIEWPORT */}
+      {/* VIEWPORT til carousel */}
       <div className="overflow-hidden" ref={emblaRef}>
-        {/* TRACK / CONTAINER */}
+        {/* TRACK / CONTAINER til filmkort */}
         <div className="flex gap-4">
           {movies.map((movie) => (
             <div key={movie.id} className="flex-none">

@@ -1,5 +1,6 @@
 "use client";
 
+// Importerer nødvendige hooks og komponenter
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { onAuthStateChanged } from "firebase/auth";
@@ -10,11 +11,14 @@ import CreateButton from "./CreateButton";
 import Modal from "./Modal";
 
 export default function SettingElement() {
+  // Henter high-contrast state og toggle fra tema-context
   const { isHighContrast, toggleHighContrast } = useTheme();
+  // State til modal, bruger-email og router
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userEmail, setUserEmail] = useState<string>("");
   const router = useRouter();
 
+  // Lyt efter login-status og sæt bruger-email
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -25,6 +29,7 @@ export default function SettingElement() {
     return () => unsubscribe();
   }, []);
 
+  // Håndter log ud
   const handleLogout = async () => {
     try {
       await signOutUser();
@@ -34,6 +39,7 @@ export default function SettingElement() {
     }
   };
 
+  // Baggrundsbillede og farve afhængig af kontrast
   const mainBgImage = isHighContrast
     ? 'linear-gradient(to top, #000000, #000000)'
     : 'linear-gradient(to top, #400B10, #B2182B), url(/assets/backgrounds-3.svg)';
@@ -53,6 +59,7 @@ export default function SettingElement() {
       }}
     >
       <div className="pt-5">
+        {/* Mine billetter-knap */}
         <button 
         onClick={() => router.push("/tickets")}
         className="w-full transition-colors p-4 flex items-center justify-between group"
@@ -60,10 +67,8 @@ export default function SettingElement() {
         <h3 className="text-[20px] font-bold text-white">Mine billetter</h3>
         <img src="assets/white-arrow-right.svg" alt="" className="w-10 h-10" />
       </button>
-
         {/* Divider */}
         <div className="w-full h-0.5 my-6 mb-4 bg-[--border]! opacity-100" style={{ backgroundColor: 'var(--border)' }}></div>
-
         {/* Høj kontrast-tilstand toggle */}
         <div className="w-full p-4 flex items-center justify-between">
           <h3 className="text-[20px] font-bold text-white">Høj kontrast-tilstand</h3>
@@ -83,11 +88,9 @@ export default function SettingElement() {
             />
           </button>
         </div>
-
         {/* Divider */}
         <div className="w-full h-0.5 my-6 mb-4 bg-[--border]! opacity-100" style={{ backgroundColor: 'var(--border)' }}></div>
-
-        {/* Om Malling Bio button */}
+        {/* Om Malling Bio-knap */}
         <button 
           onClick={() => setIsModalOpen(true)}
           className="w-full p-4 flex items-center justify-between group"
@@ -96,12 +99,11 @@ export default function SettingElement() {
           <img src="assets/white-arrow-right.svg" alt="" className="w-10 h-10" />
         </button>
       </div>
-
         <div className="w-full h-0.5 my-6 mb-4 bg-[--border]! opacity-100" style={{ backgroundColor: 'var(--border)' }}></div>
+      {/* Log ud-knap */}
       <div className="flex justify-center mt-8 pb-8">
         <CreateButton onClick={handleLogout}>Log ud</CreateButton>
       </div>
-
       {/* Om Malling Bio Modal */}
      <Modal
     isOpen={isModalOpen}
@@ -125,7 +127,7 @@ export default function SettingElement() {
           }}
         />
       </section>
-      {/* TEXT CONTENT */}
+      {/* Modal tekstindhold */}
       <div className="px-6 py-10 pb-50 text-center text-[--text] space-y-8 max-w-prose mx-auto">
         <p>
           Malling Bio er en lille, lokal biograf med stor betydning for byen. I generationer har den været

@@ -1,7 +1,8 @@
-// src/components/Modal.tsx
+// Modal-komponent: Viser en modal dialogboks med fokusfælde, ESC-lukning og valgfri tilbage-knap.
 import React, { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 
+// Definerer mulige størrelser for modalens bredde
 type Size = "sm" | "md" | "lg" | "full";
 
 type Props = {
@@ -32,11 +33,14 @@ export default function Modal({
   roundedTopOnly = false,
   onBack,
 }: Props) {
+  // Ref til modalens container for fokusstyring
   const containerRef = useRef<HTMLDivElement | null>(null);
+  // Gemmer det element, der havde fokus før modal blev åbnet
   const previouslyFocused = useRef<HTMLElement | null>(null);
+  // Finder portal-root til at placere modal i DOM'en
   const portalRoot = typeof document !== "undefined" ? document.getElementById("modal-root") ?? document.body : null;
 
-  // toggle body scroll - prevent background scrolling when modal is open
+  // Forhindrer baggrundsscroll når modal er åben
   useEffect(() => {
     if (typeof document === "undefined") return;
     if (isOpen) {
@@ -49,11 +53,11 @@ export default function Modal({
     };
   }, [isOpen]);
 
-  // manage focus + restore
+  // Håndterer fokus: sætter fokus på første element i modal og genskaber fokus ved luk
   useEffect(() => {
     if (!isOpen) return;
     previouslyFocused.current = document.activeElement as HTMLElement | null;
-    // focus first focusable in modal after paint
+    // Sætter fokus på første fokusérbare element i modal
     requestAnimationFrame(() => {
       const root = containerRef.current;
       if (!root) return;
@@ -68,12 +72,12 @@ export default function Modal({
     };
   }, [isOpen]);
 
-  // close on ESC
+  // Lytter efter ESC for at lukke modal og TAB for at fange fokus i modal
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape" && isOpen) onClose();
       if (e.key === "Tab" && isOpen) {
-        // simple focus trap
+        // Simpel fokusfælde
         const root = containerRef.current;
         if (!root) return;
         const focusables = Array.from(
@@ -100,6 +104,7 @@ export default function Modal({
     return () => window.removeEventListener("keydown", onKey);
   }, [isOpen, onClose]);
 
+  // Hvis modal ikke er åben, eller portalRoot ikke findes, returneres null
   if (!isOpen || !portalRoot) return null;
 
   return createPortal(
@@ -107,48 +112,45 @@ export default function Modal({
       className="fixed inset-0 z-50 flex items-end md:items-center justify-center"
       aria-hidden={false}
     >
-      {/* backdrop */}
+      {/* Baggrund/overlay der lukker modal ved klik */}
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
         onClick={onClose}
       />
 
-      {/* modal panel */}
-    <div
-  ref={containerRef}
-  role="dialog"
-  aria-modal="true"
-  aria-labelledby={title ? "modal-title" : undefined}
-  aria-label={ariaLabel ?? title}
-  className={`relative z-10 w-full ${sizeClass[size]} ${
-    roundedTopOnly ? "rounded-t-[30px] md:rounded-2xl" : "rounded-t-[30px]"
-  } bg-white shadow-2xl overflow-hidden max-h-[92vh] animate-slideUp`}
-  style={{
-    animation: isOpen ? "slideUp 0.3s ease-out" : "slideDown 0.3s ease-in"
-  }}
->
-  {/* header */}
+      {/* Modal-panel */}
+      <div
+        ref={containerRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={title ? "modal-title" : undefined}
+        aria-label={ariaLabel ?? title}
+        className={`relative z-10 w-full ${sizeClass[size]} ${
+          roundedTopOnly ? "rounded-t-[30px] md:rounded-2xl" : "rounded-t-[30px]"
+        } bg-white shadow-2xl overflow-hidden max-h-[92vh] animate-slideUp`}
+        style={{
+          animation: isOpen ? "slideUp 0.3s ease-out" : "slideDown 0.3s ease-in"
+        }}
+      >
+        {/* Header med titel og luk/tilbage-knap */}
+        <div className="flex items-center justify-center h-[55px] bg-[#B2182B] px-4 md:px-5">
+          <button
+            onClick={onBack || onClose}
+            aria-label={onBack ? "Gå tilbage" : "Luk"}
+            className="absolute left-4 p-2"
+          >
+            <img 
+              src={onBack ? "/assets/white-arrow-left.svg" : "/assets/white-close.svg"}
+              alt={onBack ? "Tilbage" : "Luk"}
+              className="w-5 h-5"
+            />
+          </button>
+          <div className="text-white font-semibold text-lg" id="modal-title">
+            {title}
+          </div>
+        </div>
 
-   <div className="flex items-center justify-center h-[55px] bg-[#B2182B] px-4 md:px-5">
-
-     <button
-  onClick={onBack || onClose}
-  aria-label={onBack ? "Gå tilbage" : "Luk"}
-  className="absolute left-4 p-2"
->
-  <img 
-    src={onBack ? "/assets/white-arrow-left.svg" : "/assets/white-close.svg"}
-    alt={onBack ? "Tilbage" : "Luk"}
-    className="w-5 h-5"
-  />
-</button>
-    <div className="text-white font-semibold text-lg" id="modal-title">
-      {title}
-    </div>
-   
-  </div>
-
-        {/* body */}
+        {/* Body med indhold og baggrundsgrafik */}
         <div 
           className="h-[796px] md:p-6 text-white overflow-auto"
           style={{

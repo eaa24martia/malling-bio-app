@@ -1,10 +1,12 @@
 "use client";
 
+// Importerer hooks og Firebase
 import { useState, useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase";
 
+// Mulige profilbilleder
 const profilePictures = [
   { id: 1, src: "/assets/kissy-profile.svg" },
   { id: 2, src: "/assets/scared-profile.svg" },
@@ -13,11 +15,12 @@ const profilePictures = [
 ];
 
 export default function ProfilePicture() {
+  // State til valgt billede, modal og bruger-id
   const [selectedPicture, setSelectedPicture] = useState(profilePictures[0]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
 
-  // Load user's saved profile picture
+  // Hent brugerens gemte profilbillede fra Firestore
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -44,11 +47,12 @@ export default function ProfilePicture() {
     return () => unsubscribe();
   }, []);
 
+  // Håndter valg af profilbillede og gem til Firestore
   const handleSelectPicture = async (picture: typeof profilePictures[0]) => {
     setSelectedPicture(picture);
     setIsModalOpen(false);
 
-    // Save to Firebase
+    // Gem til Firebase
     if (userId) {
       try {
         await setDoc(
@@ -62,6 +66,7 @@ export default function ProfilePicture() {
     }
   };
 
+  // UI rendering af profilbillede og modal
   return (
     <>
       <div className="flex flex-col items-center mt-5 gap-4">
@@ -80,7 +85,7 @@ export default function ProfilePicture() {
         </button>
       </div>
 
-      {/* Modal */}
+      {/* Modal til valg af profilbillede */}
       {isModalOpen && (
         <div
           className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
@@ -104,7 +109,7 @@ export default function ProfilePicture() {
               </button>
             </div>
 
-            {/* Profile Picture Options */}
+            {/* Profilbillede-valg */}
             <div className="grid grid-cols-2 gap-4">
               {profilePictures.map((picture) => (
                 <button
