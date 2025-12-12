@@ -31,7 +31,9 @@ export default function MovieSlider() {
     const loadMovies = async () => {
       try {
         const moviesRef = collection(db, "movies");
-        const snapshot = await getDocs(moviesRef);
+        // Only fetch movies where isUpcoming is false
+        const q = query(moviesRef, where("isUpcoming", "==", false));
+        const snapshot = await getDocs(q);
         const moviesData = snapshot.docs.map(doc => ({
           id: doc.id,
           title: doc.data().title,
