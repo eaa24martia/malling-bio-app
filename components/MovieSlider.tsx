@@ -32,15 +32,12 @@ export default function MovieSlider() {
       try {
         const moviesRef = collection(db, "movies");
         const snapshot = await getDocs(moviesRef);
-        const moviesData = snapshot.docs
-          .map(doc => ({
-            id: doc.id,
-            title: doc.data().title,
-            posterUrl: doc.data().posterUrl,
-            slug: doc.data().slug,
-            isUpcoming: doc.data().isUpcoming,
-          } as Movie & { isUpcoming?: boolean }))
-          .filter(movie => !movie.isUpcoming); // Only current movies
+        const moviesData = snapshot.docs.map(doc => ({
+          id: doc.id,
+          title: doc.data().title,
+          posterUrl: doc.data().posterUrl,
+          slug: doc.data().slug,
+        } as Movie));
         setMovies(moviesData);
       } catch (error) {
         console.error("Error loading movies:", error);

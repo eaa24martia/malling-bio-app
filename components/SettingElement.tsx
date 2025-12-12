@@ -109,7 +109,13 @@ export default function SettingElement() {
   title="Om Malling Bio"
   size="md"
 >
-  <div className="relative min-h-full" style={{ background: 'var(--surface)' }}>
+  <div
+    className="relative min-h-full"
+    style={{
+      background: isHighContrast ? '#000 !important' : '#410C10 !important',
+      backgroundColor: isHighContrast ? '#000 !important' : '#410C10 !important',
+    }}
+  >
     {/* IMAGE HERO */}
     <section className="relative w-full h-64 md:h-72">
       <img
@@ -119,10 +125,10 @@ export default function SettingElement() {
       />
 
       {/* Gradient fade into background */}
-      <div 
+      <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'linear-gradient(to bottom, transparent, var(--surface))'
+          background: `linear-gradient(to bottom, transparent, ${isHighContrast ? '#000' : '#410C10'})`
         }}
       />
     </section>
