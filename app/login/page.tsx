@@ -1,5 +1,6 @@
 "use client";
 
+// Importerer nødvendige hooks og komponenter
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -10,7 +11,9 @@ import { signInUser } from "@/lib/auth";
 import { useTheme } from "@/contexts/ThemeContext";
 
 export default function LoginPage() {
+  // Henter high-contrast state fra tema-context
   const { isHighContrast } = useTheme();
+  // State til inputfelter, fejlbesked og loading
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -18,35 +21,30 @@ export default function LoginPage() {
 
   const router = useRouter();
 
+  // Låser scroll på login-siden
   useEffect(() => {
-    // Disable scrolling on this page
     document.body.style.overflow = 'hidden';
-    
-    // Re-enable scrolling when component unmounts
+    // Genskaber scroll ved unmount
     return () => {
       document.body.style.overflow = 'auto';
     };
   }, []);
 
+  // Håndterer login-formularen
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-
-    // Basic validation
+    // Simpel validering
     if (!email.trim()) {
       return setError("E-mail er påkrævet");
     }
-
     if (!password.trim()) {
       return setError("Adgangskode er påkrævet");
     }
-
     setLoading(true);
-
     try {
       await signInUser({ email: email.trim(), password });
-      
-      // Redirect to dashboard or home page after successful login
+      // Omdiriger til forside ved succes
       router.push("/home");
     } catch (error: any) {
       setError(error.message);
@@ -69,6 +67,7 @@ export default function LoginPage() {
       }
     >
       <section className="relative z-10">
+        {/* Header med tilbage-knap og logo */}
         <div className="relative flex justify-center p-6">
           <Link href="/" className="absolute left-6 flex items-center hover:opacity-80 transition-opacity">
             <Image
@@ -78,20 +77,18 @@ export default function LoginPage() {
               height={26}
             />
           </Link>
-          
           <RedLogo/>
         </div>
-
         <div>
+          {/* Titel */}
           <h1
             className={`font-bold text-center mb-2 mt-2 ${isHighContrast ? 'text-white' : 'text-[#192B5A]'}`}
             style={{ fontSize: '30px' }}
           >
             Log ind
           </h1>
-
+        {/* Login-formular */}
         <section className="flex flex-col justify-center p-6">
-
           <form id="loginForm" onSubmit={handleSubmit} className="space-y-4">
             <Input
               id="email"
@@ -102,7 +99,6 @@ export default function LoginPage() {
               placeholder="din@gmail.com"
               required
             />
-
             <Input
               id="password"
               label="Adgangskode"
@@ -114,7 +110,7 @@ export default function LoginPage() {
             />
           </form>
         </section>
-
+        {/* Log ind-knap */}
         <div className="flex justify-center mt-2">
           <button 
             type="submit" 
@@ -143,7 +139,7 @@ export default function LoginPage() {
             {loading ? "Logger ind..." : "Log ind"}
           </button>
         </div>
-
+        {/* Fejlbesked vises hvis der er fejl */}
         {error && (
           <div className="text-center mt-4">
             <p className="text-red-600 text-sm" style={{ fontFamily: 'var(--font-palanquin)' }}>
@@ -151,7 +147,7 @@ export default function LoginPage() {
             </p>
           </div>
         )}
-
+        {/* Link til signup hvis man ikke har en konto */}
         <p
           className={`text-center text-sm mt-6 ${isHighContrast ? 'text-white' : 'text-[#192B5A]'}`}
           style={{ fontFamily: 'var(--font-palanquin)' }}
